@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apex Institute - College Attendance Management System</title>
+  <meta name="description" content="Official College Attendance Management System for Faculty and Students.">
+  <link rel="icon" type="image/jpeg" href="assets/crest.jpg">
+  
+  <!-- Clean, highly readable standard typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Institutional Header -->
+  <header class="top-nav">
+    <div class="nav-container">
+      <div class="brand-group">
+        <img src="assets/crest.jpg" alt="University Emblem" class="crest-logo">
+        <div class="brand-text">
+          <span class="college-title">APEX INSTITUTE OF TECHNOLOGY</span>
+          <span class="college-sub">Department of Computer Science & Engineering • Attendance Portal</span>
+        </div>
+      </div>
+
+      <!-- Right Header Status & Navigation -->
+      <div class="header-right">
+        <div class="server-pill" id="serverPill" title="Backend Server Status">
+          <span class="status-indicator-dot"></span>
+          <span id="serverStatusText">Connected</span>
+        </div>
+
+        <!-- Dynamic User Badge & Logout Button (Visible only when logged in) -->
+        <div class="user-session-bar" id="userSessionBar" style="display: none;">
+          <span class="session-user-badge" id="sessionUserBadge">Faculty: Prof. Venkat</span>
+          <button class="btn btn-logout" id="btnLogout">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            <span>Logout</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="page-body">
+
+    <!-- ===================================================================== -->
+    <!-- VIEW 1: PORTAL SELECTION (LANDING SCREEN)                             -->
+    <!-- ===================================================================== -->
+    <section id="viewPortalSelection" class="view-section active">
+      <div class="selection-hero">
+        <div class="welcome-box">
+          <h1 class="portal-main-heading">College Attendance Management System</h1>
+          <p class="portal-main-desc">
+            Welcome to the official academic attendance management system for 3rd Year B.Tech Computer Science & Engineering. Please select your role to proceed:
+          </p>
+        </div>
+
+        <div class="roles-grid">
+          
+          <!-- Option 1: Teacher Login Card -->
+          <div class="role-card" id="cardSelectTeacher">
+            <div class="role-icon-box icon-teacher">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"></path><path d="M6 6h10"></path><path d="M6 10h10"></path><path d="M10 14h6"></path></svg>
+            </div>
+            <h2 class="role-title">Teacher Portal</h2>
+            <p class="role-desc">
+              Dedicated dashboard for Subject Faculty. Post daily student attendance, inspect class turnout, view overall attendance percentages, and track defaulters (< 75%).
+            </p>
+            <div class="role-features">
+              <span>✓ Post Attendance (3 Modes)</span>
+              <span>✓ 30-Student Register</span>
+              <span>✓ Automatic Defaulter Analysis</span>
+            </div>
+            <button class="btn btn-primary btn-block" id="btnGoTeacherLogin">
+              Proceed to Teacher Login &rarr;
+            </button>
+          </div>
+
+          <!-- Option 2: Student Login Card -->
+          <div class="role-card" id="cardSelectStudent">
+            <div class="role-icon-box icon-student">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+            </div>
+            <h2 class="role-title">Student Portal</h2>
+            <p class="role-desc">
+              Read-only personal attendance portal. Enter your Roll Number to inspect your 5-subjects statement, date-by-date lecture log, and final semester exam eligibility.
+            </p>
+            <div class="role-features">
+              <span>✓ 5-Subjects Attendance</span>
+              <span>✓ Exam Eligibility Status (75%)</span>
+              <span>✓ Date-by-Date Lecture Log</span>
+            </div>
+            <button class="btn btn-success btn-block" id="btnGoStudentLogin">
+              Proceed to Student Login &rarr;
+            </button>
+          </div>
+
+        </div>
+
+        <div class="academic-note-box">
+          <strong>Institutional Regulation:</strong> Under University Ordinance 12.4, students must maintain a minimum cumulative attendance of <strong>75%</strong> to obtain clearance for Semester End Examinations.
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ===================================================================== -->
+    <!-- VIEW 2: TEACHER LOGIN (PASSWORD SCREEN)                              -->
+    <!-- ===================================================================== -->
+    <section id="viewTeacherLogin" class="view-section">
+      <div class="login-wrapper">
+        <div class="login-card">
+          <div class="login-card-header">
+            <div class="login-badge-icon icon-teacher">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"></path><path d="M6 6h10"></path><path d="M6 10h10"></path><path d="M10 14h6"></path></svg>
+            </div>
+            <h2 class="login-title">Teacher Authentication</h2>
+            <p class="login-subtitle">Enter your subject faculty password to access the teacher dashboard</p>
+          </div>
+
+          <form id="teacherLoginForm" onsubmit="return false;">
+            
+            <div class="form-group">
+              <label for="teacherSubjectSelect" class="form-label">Subject & Faculty Member:</label>
+              <select id="teacherSubjectSelect" class="form-select">
+                <option value="JAVA">Java Programming (Prof. Venkat) - pass: java</option>
+                <option value="PYTHON">Python Programming (Dr. Rajesh) - pass: python</option>
+                <option value="MATHS">Engineering Mathematics (Dr. Sharma) - pass: maths</option>
+                <option value="DSA">Data Structures & Algo (Prof. Priya) - pass: dsa</option>
+                <option value="WEB">Web Technologies (Prof. Arun) - pass: web</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="teacherPasswordInput" class="form-label">Password:</label>
+              <div class="password-input-wrap">
+                <input type="password" id="teacherPasswordInput" class="form-control" placeholder="Enter password (e.g. java, python...)" required autofocus>
+                <button type="button" class="btn-toggle-eye" id="btnToggleTeacherPass" title="Show/Hide Password">👁</button>
+              </div>
+            </div>
+
+            <!-- Helpful password reminders -->
+            <div class="password-helper-alert">
+              <div class="helper-title">Faculty Passwords:</div>
+              <div class="helper-pills">
+                <button type="button" class="chip-pass" data-sub="JAVA" data-pass="java">JAVA: <code>java</code></button>
+                <button type="button" class="chip-pass" data-sub="PYTHON" data-pass="python">PYTHON: <code>python</code></button>
+                <button type="button" class="chip-pass" data-sub="MATHS" data-pass="maths">MATHS: <code>maths</code></button>
+                <button type="button" class="chip-pass" data-sub="DSA" data-pass="dsa">DSA: <code>dsa</code></button>
+                <button type="button" class="chip-pass" data-sub="WEB" data-pass="web">WEB: <code>web</code></button>
+              </div>
+              <div class="helper-sub">Master Password: <code>teach123</code></div>
+            </div>
+
+            <div id="teacherLoginError" class="alert alert-danger" style="display: none;"></div>
+
+            <div class="login-buttons-row">
+              <button type="button" class="btn btn-secondary" id="btnBackFromTeacherLogin">&larr; Back</button>
+              <button type="submit" class="btn btn-primary" id="btnSubmitTeacherLogin">Login to Dashboard</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ===================================================================== -->
+    <!-- VIEW 3: STUDENT LOGIN (ROLL NUMBER SCREEN)                           -->
+    <!-- ===================================================================== -->
+    <section id="viewStudentLogin" class="view-section">
+      <div class="login-wrapper">
+        <div class="login-card">
+          <div class="login-card-header">
+            <div class="login-badge-icon icon-student">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+            </div>
+            <h2 class="login-title">Student Portal Login</h2>
+            <p class="login-subtitle">Enter your roll number to view personal attendance records</p>
+          </div>
+
+          <form id="studentLoginForm" onsubmit="return false;">
+            
+            <div class="form-group">
+              <label for="studentRollInput" class="form-label">Student Roll Number (101 to 130):</label>
+              <input type="text" id="studentRollInput" class="form-control" placeholder="Enter Roll Number (e.g. 101, 102...)" required autofocus maxlength="5">
+            </div>
+
+            <div class="form-group">
+              <label for="studentQuickSelect" class="form-label">Or Select Student by Name:</label>
+              <select id="studentQuickSelect" class="form-select">
+                <option value="">-- Choose student from list --</option>
+                <!-- Populated by JS -->
+              </select>
+            </div>
+
+            <!-- Quick sample student buttons -->
+            <div class="quick-sample-box">
+              <span class="sample-label">Quick Sample Students:</span>
+              <div class="sample-pills">
+                <button type="button" class="sample-pill" data-roll="101">101 - Aarav Sharma (Top 100%)</button>
+                <button type="button" class="sample-pill" data-roll="102">102 - Bhavna Patel (Regular 85%)</button>
+                <button type="button" class="sample-pill sample-pill-warning" data-roll="121">121 - Uday Chauhan (Borderline ~70%)</button>
+                <button type="button" class="sample-pill sample-pill-danger" data-roll="126">126 - Zoya Siddiqui (Defaulter <60%)</button>
+              </div>
+            </div>
+
+            <div id="studentLoginError" class="alert alert-danger" style="display: none;"></div>
+
+            <div class="login-buttons-row">
+              <button type="button" class="btn btn-secondary" id="btnBackFromStudentLogin">&larr; Back</button>
+              <button type="submit" class="btn btn-success" id="btnSubmitStudentLogin">View My Attendance</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ===================================================================== -->
+    <!-- VIEW 4: TEACHER DASHBOARD (CLEAN & PROPERLY RUNNING)                 -->
+    <!-- ===================================================================== -->
+    <section id="viewTeacherDashboard" class="view-section">
+      
+      <!-- Teacher Info Banner -->
+      <div class="dashboard-banner">
+        <div class="banner-left">
+          <div class="banner-avatar" id="tDashAvatar">TV</div>
+          <div class="banner-info">
+            <div class="banner-tags">
+              <span class="tag-subject" id="tDashSubCode">JAVA</span>
+              <span class="tag-dept">CSE 3rd Year / Section A</span>
+            </div>
+            <h1 class="banner-name" id="tDashFacultyName">Prof. Venkat</h1>
+            <p class="banner-course" id="tDashSubName">Course: Java Programming</p>
+          </div>
+        </div>
+
+        <div class="banner-right">
+          <div class="subject-switcher-dropdown">
+            <label for="tDashSubjectSwitcher" class="switch-label">Switch Subject Teacher:</label>
+            <select id="tDashSubjectSwitcher" class="form-select form-select-sm">
+              <option value="JAVA">JAVA - Java Programming (Prof. Venkat)</option>
+              <option value="PYTHON">PYTHON - Python Programming (Dr. Rajesh)</option>
+              <option value="MATHS">MATHS - Engineering Maths (Dr. Sharma)</option>
+              <option value="DSA">DSA - Data Structures & Algo (Prof. Priya)</option>
+              <option value="WEB">WEB - Web Technologies (Prof. Arun)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="tabs-nav-bar">
+        <button class="dash-tab-btn active" data-tab="tTabPost" id="btnTabPost">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 11 3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+          <span>Post Attendance</span>
+        </button>
+        <button class="dash-tab-btn" data-tab="tTabRegister" id="btnTabRegister">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+          <span>Class Attendance %</span>
+        </button>
+        <button class="dash-tab-btn" data-tab="tTabDefaulters" id="btnTabDefaulters">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          <span>Defaulters List (< 75%)</span>
+          <span class="tab-badge-count" id="tDefaultersCountBadge">0</span>
+        </button>
+        <button class="dash-tab-btn" data-tab="tTabDaily" id="btnTabDaily">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          <span>Daily Register Log</span>
+        </button>
+      </div>
+
+      <!-- Tab Content Area -->
+      <div class="dash-content-area">
+
+        <!-- 4.1 SUB-TAB: POST ATTENDANCE -->
+        <div id="tTabPost" class="tab-pane active">
+          
+          <div class="card clean-card">
+            <div class="card-title-bar">
+              <div>
+                <h2 class="card-h2">Post Attendance for <span id="postCourseNameText">Java Programming</span></h2>
+                <p class="card-p">Select the lecture date, mark absent or present students, and click Save Attendance.</p>
+              </div>
+            </div>
+
+            <!-- Top Controls Row -->
+            <div class="post-controls-grid">
+              
+              <!-- Date Picker -->
+              <div class="control-box">
+                <label for="postDateInput" class="form-label font-bold">1. Lecture Date:</label>
+                <div class="date-flex">
+                  <input type="date" id="postDateInput" class="form-control">
+                  <button type="button" class="btn btn-sm btn-secondary" id="btnPostToday">Today</button>
+                  <button type="button" class="btn btn-sm btn-secondary" id="btnPostYesterday">Yesterday</button>
+                </div>
+              </div>
+
+              <!-- Entry Mode Switcher -->
+              <div class="control-box">
+                <label class="form-label font-bold">2. Marking Method:</label>
+                <div class="mode-radios">
+                  <label class="radio-label">
+                    <input type="radio" name="postMode" value="absent" checked id="modeAbsent">
+                    <span><strong>Select ABSENT Students</strong> (remaining are Present)</span>
+                  </label>
+                  <label class="radio-label">
+                    <input type="radio" name="postMode" value="present" id="modePresent">
+                    <span><strong>Select PRESENT Students</strong> (remaining are Absent)</span>
+                  </label>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Comma Input Shortcut Bar -->
+            <div class="comma-shortcut-bar" id="commaShortcutBox">
+              <label for="commaRollInput" class="form-label" id="commaRollLabel">
+                Quick Entry: Enter Comma-Separated Absent Roll Numbers:
+              </label>
+              <div class="input-with-btn">
+                <input type="text" id="commaRollInput" class="form-control" placeholder="e.g. 103, 108, 126, 129">
+                <button type="button" class="btn btn-secondary" id="btnApplyCommaRolls">Apply Numbers</button>
+              </div>
+              <p class="form-help" id="commaHelpText">
+                Tip: Type roll numbers separated by commas and click Apply, or simply click on the student cards below.
+              </p>
+            </div>
+
+            <!-- Live Attendance Summary Meter -->
+            <div class="live-counter-strip">
+              <div class="counter-item">
+                <span class="counter-label">Total Enrolled</span>
+                <span class="counter-val" id="cntTotal">30</span>
+              </div>
+              <div class="counter-item text-green">
+                <span class="counter-label">Present</span>
+                <span class="counter-val" id="cntPresent">30</span>
+              </div>
+              <div class="counter-item text-red">
+                <span class="counter-label">Absent</span>
+                <span class="counter-val" id="cntAbsent">0</span>
+              </div>
+              <div class="counter-item counter-pct">
+                <span class="counter-label">Turnout Rate</span>
+                <span class="counter-val" id="cntPct">100.0%</span>
+              </div>
+            </div>
+
+            <!-- Toolbar: Quick Actions -->
+            <div class="roster-header-bar">
+              <div class="roster-title">
+                <strong>Click any student card to toggle attendance:</strong>
+              </div>
+              <div class="roster-actions">
+                <button type="button" class="btn btn-sm btn-outline-success" id="btnAllPresent">Mark All Present</button>
+                <button type="button" class="btn btn-sm btn-outline-danger" id="btnAllAbsent">Mark All Absent</button>
+                <button type="button" class="btn btn-sm btn-secondary" id="btnInvert">Invert All</button>
+              </div>
+            </div>
+
+            <!-- Student Cards Grid (30 Students) -->
+            <div class="students-roster-grid" id="studentsRosterGrid">
+              <!-- Dynamically rendered student toggle cards -->
+            </div>
+
+            <!-- Save Attendance Button -->
+            <div class="post-footer-bar">
+              <div id="postFeedbackMsg" class="feedback-msg" style="display: none;"></div>
+              <button type="button" class="btn btn-success btn-lg" id="btnSaveAttendance">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                <span>Save Attendance to Database</span>
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- 4.2 SUB-TAB: CLASS ATTENDANCE REGISTER -->
+        <div id="tTabRegister" class="tab-pane">
+          <div class="card clean-card">
+            
+            <div class="card-title-bar flex-between">
+              <div>
+                <h2 class="card-h2">Class Attendance Register (All 30 Students)</h2>
+                <p class="card-p" id="registerCourseSubtitle">3rd Year B.Tech CSE • Java Programming</p>
+              </div>
+              <div class="btn-group-right">
+                <button type="button" class="btn btn-secondary btn-sm" id="btnDownloadRegisterCsv">
+                  📥 Download CSV
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm" id="btnPrintRegisterReport">
+                  🖨️ Print Register
+                </button>
+              </div>
+            </div>
+
+            <!-- Filter and Search Row -->
+            <div class="table-search-row">
+              <div class="search-input-wrap">
+                <input type="text" id="searchRegisterInput" class="form-control" placeholder="Search student name or roll number...">
+              </div>
+              <div class="filter-btn-group" id="registerFilterGroup">
+                <button type="button" class="filter-tab active" data-filter="all">All (30)</button>
+                <button type="button" class="filter-tab" data-filter="eligible" id="tabEligibleFilter">Eligible (&ge;75%)</button>
+                <button type="button" class="filter-tab" data-filter="shortage" id="tabShortageFilter">Shortage (&lt;75%)</button>
+              </div>
+            </div>
+
+            <!-- Register Table -->
+            <div class="table-wrapper">
+              <table class="standard-table" id="tableClassRegister">
+                <thead>
+                  <tr>
+                    <th style="width: 90px;">Roll No</th>
+                    <th>Student Name</th>
+                    <th>Class</th>
+                    <th style="width: 100px;">Classes Held</th>
+                    <th style="width: 100px;">Attended</th>
+                    <th style="width: 100px;">Absent</th>
+                    <th style="width: 150px;">Attendance %</th>
+                    <th style="width: 120px;">Exam Status</th>
+                  </tr>
+                </thead>
+                <tbody id="tbodyClassRegister">
+                  <!-- JS Injected -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Register Footer -->
+            <div class="table-footer-summary" id="registerFooterSummary">
+              <!-- Summary populated by JS -->
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 4.3 SUB-TAB: DEFAULTERS LIST (< 75%) -->
+        <div id="tTabDefaulters" class="tab-pane">
+          <div class="card clean-card">
+            
+            <div class="alert-defaulter-box">
+              <div class="defaulter-icon">⚠️</div>
+              <div class="defaulter-text">
+                <h3 class="defaulter-h3">University Statutory Defaulters Alert (&lt; 75% Requirement)</h3>
+                <p class="defaulter-p">
+                  Students listed below currently have attendance below the mandatory <strong>75%</strong> requirement. They risk detention from semester-end examinations unless attendance improves to satisfy the target.
+                </p>
+              </div>
+              <div class="defaulter-count-pill" id="defaulterCountPill">0 Defaulters</div>
+            </div>
+
+            <div class="card-title-bar flex-between mt-3">
+              <div>
+                <h2 class="card-h2">Shortage & Recovery Analysis</h2>
+                <p class="card-p">Recovery formula: &lceil;(75 &times; Total Held - 100 &times; Attended) / 25&rceil;</p>
+              </div>
+              <div>
+                <button type="button" class="btn btn-warning btn-sm" id="btnPrintDefaultersNotice">
+                  📄 Print Official Warning Notice
+                </button>
+              </div>
+            </div>
+
+            <!-- Defaulters Table -->
+            <div class="table-wrapper">
+              <table class="standard-table" id="tableDefaulters">
+                <thead>
+                  <tr>
+                    <th style="width: 90px;">Roll No</th>
+                    <th>Student Name</th>
+                    <th style="width: 90px;">Held</th>
+                    <th style="width: 90px;">Attended</th>
+                    <th style="width: 90px;">Absent</th>
+                    <th style="width: 120px;">Current %</th>
+                    <th style="width: 120px;">Shortage Deficit</th>
+                    <th style="width: 180px;">Classes Needed to Reach 75%</th>
+                    <th style="width: 110px;">Severity</th>
+                  </tr>
+                </thead>
+                <tbody id="tbodyDefaulters">
+                  <!-- JS Injected -->
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 4.4 SUB-TAB: DAILY REGISTER LOG -->
+        <div id="tTabDaily" class="tab-pane">
+          <div class="card clean-card">
+            
+            <div class="card-title-bar flex-between">
+              <div>
+                <h2 class="card-h2">Daily Attendance Register Log</h2>
+                <p class="card-p">Inspect attendance recorded on any past lecture date</p>
+              </div>
+              <div class="daily-picker-row">
+                <label for="inspectDateInput" class="mr-1">Select Date:</label>
+                <input type="date" id="inspectDateInput" class="form-control form-control-sm">
+                <button type="button" class="btn btn-primary btn-sm" id="btnLoadDailyRegister">View Register</button>
+              </div>
+            </div>
+
+            <div class="daily-metrics-row" id="dailyMetricsBox">
+              <div class="metric-pill">
+                <span>Date:</span> <strong id="dLogDate">-</strong>
+              </div>
+              <div class="metric-pill">
+                <span>Turnout Rate:</span> <strong id="dLogRate" class="text-green">0%</strong>
+              </div>
+              <div class="metric-pill">
+                <span>Present:</span> <strong id="dLogPresent" class="text-green">0</strong>
+              </div>
+              <div class="metric-pill">
+                <span>Absent:</span> <strong id="dLogAbsent" class="text-red">0</strong>
+              </div>
+            </div>
+
+            <div class="table-wrapper">
+              <table class="standard-table">
+                <thead>
+                  <tr>
+                    <th style="width: 90px;">Roll No</th>
+                    <th>Student Name</th>
+                    <th>Subject</th>
+                    <th>Lecture Date</th>
+                    <th style="width: 120px;">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="tbodyDailyRegister">
+                  <!-- JS Injected -->
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================================== -->
+    <!-- VIEW 5: STUDENT DASHBOARD (INDIVIDUAL SPECIFIED STUDENT)              -->
+    <!-- ===================================================================== -->
+    <section id="viewStudentDashboard" class="view-section">
+      
+      <!-- Student Profile Card -->
+      <div class="student-profile-card">
+        <div class="student-avatar" id="sDashAvatar">AS</div>
+        <div class="student-info">
+          <div class="student-roll-tag" id="sDashRollTag">Roll #101</div>
+          <h1 class="student-name" id="sDashName">Aarav Sharma</h1>
+          <p class="student-class" id="sDashClass">Department of Computer Science & Engineering • 3rd Year / Section A</p>
+        </div>
+        <div class="student-aggregate-box">
+          <span class="agg-label">Overall 5-Subject Aggregate</span>
+          <span class="agg-val" id="sDashAggregateVal">92.5%</span>
+          <span class="agg-sub" id="sDashHeldAttendedRatio">48 / 52 Lectures</span>
+        </div>
+      </div>
+
+      <!-- Semester Exam Eligibility Verdict Box -->
+      <div class="verdict-card verdict-pass" id="sDashVerdictBox">
+        <div class="verdict-icon" id="sDashVerdictIcon">🎓</div>
+        <div class="verdict-text">
+          <h3 class="verdict-heading" id="sDashVerdictTitle">ELIGIBLE TO APPEAR IN SEMESTER END EXAMINATIONS</h3>
+          <p class="verdict-description" id="sDashVerdictDesc">
+            Your cumulative attendance across all 5 curriculum subjects satisfies the mandatory 75% university requirement. Hall ticket clearance confirmed.
+          </p>
+        </div>
+      </div>
+
+      <!-- 5-Subjects Cards Grid -->
+      <div class="section-heading-row">
+        <h2 class="section-h2">5-Subjects Attendance Statement</h2>
+        <span class="section-tag">Academic Year 2026-27</span>
+      </div>
+
+      <div class="subjects-cards-row" id="sDashSubjectCardsGrid">
+        <!-- 5 Cards for Java, Python, Maths, DSA, Web populated by JS -->
+      </div>
+
+      <!-- 5-Subjects Table & History Grid -->
+      <div class="student-tables-grid">
+        
+        <!-- Summary Table -->
+        <div class="card clean-card">
+          <div class="card-title-bar">
+            <h3 class="card-h2">Subject-wise Attendance Statement</h3>
+          </div>
+          <div class="table-wrapper">
+            <table class="standard-table">
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Subject</th>
+                  <th>Held</th>
+                  <th>Attended</th>
+                  <th>Absent</th>
+                  <th>Percentage</th>
+                  <th>Status</th>
+                  <th>Target</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyStudentStatement">
+                <!-- Injected by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Date-by-date Lecture Log -->
+        <div class="card clean-card">
+          <div class="card-title-bar flex-between">
+            <h3 class="card-h2">Date-wise Lecture Log</h3>
+            <select id="sDashHistorySubSelect" class="form-select form-select-sm" style="width: auto;">
+              <option value="ALL">All 5 Subjects</option>
+              <option value="JAVA">JAVA - Java Programming</option>
+              <option value="PYTHON">PYTHON - Python Programming</option>
+              <option value="MATHS">MATHS - Engineering Maths</option>
+              <option value="DSA">DSA - Data Structures & Algo</option>
+              <option value="WEB">WEB - Web Technologies</option>
+            </select>
+          </div>
+          <div class="table-wrapper history-scroll-box">
+            <table class="standard-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Subject</th>
+                  <th>Attendance Status</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyStudentHistory">
+                <!-- Injected by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Institutional Footer -->
+  <footer class="page-footer">
+    <div class="footer-container">
+      <div>
+        &copy; 2026 Apex Institute of Technology • Computer Science & Engineering.
+      </div>
+      <div>
+        University Attendance Ordinance Regulation: Mandatory 75% Attendance Requirement
+      </div>
+    </div>
+  </footer>
+
+  <!-- Official Warning Notice Modal (for print) -->
+  <div class="modal-backdrop" id="modalNotice" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Official University Defaulters Notice</h3>
+        <button type="button" class="modal-close" id="btnCloseNotice">&times;</button>
+      </div>
+      <div class="modal-body print-letterhead" id="noticeContentArea">
+        <!-- JS rendered official warning letterhead -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="btnDismissNotice">Close</button>
+        <button type="button" class="btn btn-primary" id="btnPrintNoticeModal">Print Letterhead</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

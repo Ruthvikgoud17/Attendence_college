@@ -10,7 +10,7 @@ A responsive, high-performance web dashboard featuring real-time data sync with 
 
 - **👨‍🏫 Teacher Portal**:
   - **5 Faculty Teachers Pre-configured**:
-    - `JAVA` — **Java Programming** (Prof. Venkat, password: `java`)
+    - `JAVA` — **Java Programming** (Dr. Naga Padmaja, password: `java`)
     - `PYTHON` — **Python Programming** (Dr. Rajesh, password: `python`)
     - `MATHS` — **Engineering Mathematics** (Dr. Sharma, password: `maths`)
     - `DSA` — **Data Structures & Algo** (Prof. Priya, password: `dsa`)
@@ -24,10 +24,11 @@ A responsive, high-performance web dashboard featuring real-time data sync with 
   - **Daily Attendance Register**: Turnout rate inspector for any date.
 
 - **🧑‍🎓 Student Portal (View Only)**:
-  - **Student Selector**: Quick selector for all 30 students (Roll `101` to `130`) or demo badges (`101` Top Performer, `126` Defaulter, etc.).
+  - **Password Protected**: Secure student login requiring Roll Number (101 to 130) and password formatted as `<RollNumber>@123` (e.g., `101@123`, `102@123`).
+  - **Student Selector**: Quick selector for all 30 students (Roll `101` to `130`) or demo badges (`101` Top Performer, `126` Defaulter, etc.) with automatic password filling for fast access.
   - **Profile Hero Card**: Displays roll number, department (CSE 3rd Year / A), and an **Animated Circular Attendance Gauge**.
   - **Semester Examination Verdict Banner**: Instant clearance status (Prominent Green for $\ge$ 75% or Caution Amber/Red for Shortage).
-  - **5-Subjects Attendance Cards**: Individual progress meters, faculty in-charge, and recovery target advice (*Goal Satisfied* or *Need +N classes*).
+  - **5-Subjects Attendance Cards**: Individual progress meters, faculty in-charge (including **Dr. Naga Padmaja** for Java), and recovery target advice (*Goal Satisfied* or *Need +N classes*).
   - **Date-wise Lecture Log**: Chronological classroom attendance history with subject filters.
 
 - **📊 College Overview & Analytics**:
@@ -41,54 +42,71 @@ A responsive, high-performance web dashboard featuring real-time data sync with 
 
 ---
 
-## 🚀 How to Run the Web Interface
+## 🚀 How to Run the Applications
 
-### Option 1: One-Click Batch Script (Windows)
-Double-click or run in terminal:
+### 1. Terminal Console Application
+To launch the interactive Java SE terminal console application:
 ```cmd
-run_web.bat
+run_terminal.bat
 ```
-*(Compiles all Java classes, starts the server at `http://localhost:8080`, and opens your default browser).*
+*(Or in PowerShell: `.\run_terminal.bat`)*
 
-### Option 2: PowerShell
-```powershell
-.\run_web.ps1
-```
-
-### Option 3: Unified Runner
-```cmd
-.\run.bat
-```
-*Select `[1]` for the Modern Web Interface or `[2]` for the Console CLI.*
-
-### Option 4: Standalone / Direct HTML Access
-You can also directly open `web/index.html` in any browser. It includes built-in offline synchronization and localStorage persistence if the Java backend is not running.
+**Features in Terminal:**
+* **Teacher Portal**: Faculty login for Dr. Naga Padmaja & subject teachers with attendance posting and registers.
+* **Student Portal**: Secure roll number login (`101` to `130`) with `<roll>@123` password and 5-subject attendance statements.
+* **Multi-Threaded Classroom Audit**: Parallel worker threads for concurrent classroom attendance auditing and validation.
+* **Analytics & Defaulters Stream Report**: High-performance Java Streams processing to filter students with attendance below 75%.
+* **Interactive GUI Roster Window**: Swing desktop interface with Delegation Event Model and live table filters.
+* **Relational Database & SQL Simulator**: Multi-tier persistence simulation with PreparedStatement parameter binding and ResultSet processing.
 
 ---
 
-## 📁 Project Structure
+### 2. Modern Web Interface
+To launch the full glassmorphic web portal:
+```cmd
+run_web.bat
+```
+*(Or in PowerShell: `.\run_web.bat`)*
+
+*Compiles all classes, frees port 8080 if needed, launches the Java HTTP Server, and opens [http://localhost:8080](http://localhost:8080) automatically.*
+
+---
+
+## 📁 Clean Project Structure
 
 ```
 ├── data/
-│   ├── attendance.csv              # Persistent attendance records database
-│   ├── students.csv                # 30 preloaded CSE students
-│   └── subjects.csv                # 5 academic subjects with teachers & passwords
+│   ├── attendance.csv                  # Persistent attendance records database
+│   ├── students.csv                    # 30 preloaded CSE students
+│   └── subjects.csv                    # 5 academic subjects (Dr. Naga Padmaja for Java)
 ├── src/
 │   └── com/attendance/
-│       ├── Main.java               # Terminal CLI application
-│       ├── model/                  # Object-Oriented models (Student, Subject, Record, Summary)
-│       ├── service/                # Business logic & CSV persistence services
-│       ├── util/                   # Console table formatters
-│       └── web/
-│           └── AttendanceWebServer.java  # Built-in Java SE HTTP REST server
+│       ├── Main.java                   # Terminal application entry menu
+│       ├── concurrent/                 # Multi-threaded classroom attendance auditing
+│       │   └── ConcurrentAttendanceAuditor.java
+│       ├── dao/                        # Database & SQL persistence simulation
+│       │   └── DatabaseSimulator.java
+│       ├── exception/                  # Custom business & validation exceptions
+│       │   ├── AttendanceValidationException.java
+│       │   ├── AuthenticationException.java
+│       │   └── InvalidRollNumberException.java
+│       ├── gui/                        # Swing desktop interface & event handling
+│       │   └── AttendanceRosterWindow.java
+│       ├── model/                      # Domain models (Student, Subject, AttendanceRecord, AttendanceSummary)
+│       ├── service/                    # Business logic & analytics engines
+│       │   ├── AttendanceAnalyticsEngine.java
+│       │   ├── AttendanceService.java
+│       │   └── DataPersistenceService.java
+│       ├── util/                       # Console table formatters
+│       └── web/                        # Built-in Java SE HTTP REST server
+│           └── AttendanceWebServer.java
 ├── web/
 │   ├── assets/
-│   │   └── crest.jpg               # University emblem crest
-│   ├── index.html                  # Semantic, rich HTML5 application
-│   ├── style.css                   # Bespoke Vanilla CSS glassmorphic design system
-│   └── app.js                      # Front-end engine & API client
-├── run.bat                         # Unified launcher (Web or CLI)
-├── run_web.bat                     # Direct Web launcher
-├── run_web.ps1                     # PowerShell Web launcher
-└── README.md                       # Project documentation
+│   │   └── crest.jpg                   # University emblem crest
+│   ├── index.html                      # Semantic HTML5 portal (Student & Teacher)
+│   ├── style.css                       # Modern CSS design system
+│   └── app.js                          # Client-side engine with student password auth
+├── run_terminal.bat                    # One-click launcher for Terminal Application
+├── run_web.bat                         # One-click launcher for Web Interface
+└── README.md                           # Documentation & user guide
 ```

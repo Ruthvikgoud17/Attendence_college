@@ -1,9 +1,0 @@
-{
-  "name": "college-attendance-management-system",
-  "version": "1.0.0",
-  "description": "College Attendance Management System - Faculty & Student Portal",
-  "private": true,
-  "scripts": {
-    "build": "echo 'Static web deployment ready'"
-  }
-}

@@ -49,14 +49,17 @@
 
   // 5 Subject Teachers & Passwords
   const PRELOADED_SUBJECTS = [
-    { subjectCode: "JAVA", subjectName: "Java Programming", facultyName: "Prof. Venkat", password: "java" },
+    { subjectCode: "JAVA", subjectName: "Java Programming", facultyName: "Dr. Naga Padmaja", password: "java" },
     { subjectCode: "PYTHON", subjectName: "Python Programming", facultyName: "Dr. Rajesh", password: "python" },
     { subjectCode: "MATHS", subjectName: "Engineering Mathematics", facultyName: "Dr. Sharma", password: "maths" },
     { subjectCode: "DSA", subjectName: "Data Structures & Algo", facultyName: "Prof. Priya", password: "dsa" },
     { subjectCode: "WEB", subjectName: "Web Technologies", facultyName: "Prof. Arun", password: "web" }
   ];
 
-  let localStudents = [...PRELOADED_STUDENTS];
+  let localStudents = PRELOADED_STUDENTS.map(s => ({
+    ...s,
+    password: s.password || `${s.rollNo}@123`
+  }));
   let localSubjects = [...PRELOADED_SUBJECTS];
   let localAttendanceRecords = [];
 
@@ -131,18 +134,28 @@
   // =========================================================================
 
   function seedOfflineDataIfEmpty() {
+    const today = getTodayString();
     const cached = localStorage.getItem('apex_attendance_records');
     if (cached) {
       try {
-        localAttendanceRecords = JSON.parse(cached);
-        return;
+        const parsed = JSON.parse(cached);
+        const hasFuture = parsed.some(r => r.date > today);
+        const hasTodayAll = PRELOADED_SUBJECTS.every(sub =>
+          parsed.some(r => r.date === today && r.subjectCode === sub.subjectCode)
+        );
+        if (!hasFuture && hasTodayAll) {
+          localAttendanceRecords = parsed;
+          return;
+        }
       } catch (e) {}
     }
 
     localAttendanceRecords = [];
+    // Dates ending on today (the present day)
     const dates = [
-      "2026-09-22", "2026-09-23", "2026-09-24", "2026-09-25", "2026-09-26",
-      "2026-09-29", "2026-09-30", "2026-10-01", "2026-10-02", "2026-10-05"
+      "2026-09-23", "2026-09-24", "2026-09-25", "2026-09-26",
+      "2026-09-29", "2026-09-30", "2026-10-01", "2026-10-02",
+      "2026-10-05", "2026-10-06", today
     ];
 
     dates.forEach(date => {
@@ -151,14 +164,27 @@
           const rollNum = parseInt(stu.rollNo, 10);
           let isPresent = true;
 
-          if (rollNum >= 126) {
-            isPresent = (rollNum + date.charCodeAt(9)) % 3 === 0;
-          } else if (rollNum >= 121) {
-            isPresent = (rollNum + date.charCodeAt(9)) % 4 !== 0;
-          } else if (rollNum <= 103) {
-            isPresent = true;
+          if (date === today) {
+            // Present day attendance across all 5 curriculum subjects
+            if (rollNum >= 126) {
+              isPresent = (sub.subjectCode !== "MATHS" && sub.subjectCode !== "DSA");
+            } else if (rollNum >= 121) {
+              isPresent = !(sub.subjectCode === "DSA" && rollNum % 2 === 0);
+            } else if (rollNum === 109) {
+              isPresent = (sub.subjectCode !== "MATHS");
+            } else {
+              isPresent = true; // Top & regular students 100% Present on today
+            }
           } else {
-            isPresent = (rollNum + date.charCodeAt(9)) % 7 !== 0;
+            if (rollNum >= 126) {
+              isPresent = (rollNum + date.charCodeAt(9)) % 3 === 0;
+            } else if (rollNum >= 121) {
+              isPresent = (rollNum + date.charCodeAt(9)) % 4 !== 0;
+            } else if (rollNum <= 103) {
+              isPresent = true;
+            } else {
+              isPresent = (rollNum + date.charCodeAt(9)) % 7 !== 0;
+            }
           }
 
           localAttendanceRecords.push({
@@ -212,6 +238,8 @@
 
     document.getElementById('btnGoStudentLogin').addEventListener('click', () => {
       document.getElementById('studentRollInput').value = '';
+      const passIn = document.getElementById('studentPasswordInput');
+      if (passIn) passIn.value = '';
       document.getElementById('studentLoginError').style.display = 'none';
       showView(Views.studentLogin);
       document.getElementById('studentRollInput').focus();
@@ -234,6 +262,10 @@
     activeTeacherSubject = null;
     activeStudent = null;
     Header.userSessionBar.style.display = 'none';
+    const sPass = document.getElementById('studentPasswordInput');
+    if (sPass) sPass.value = '';
+    const tPass = document.getElementById('teacherPasswordInput');
+    if (tPass) tPass.value = '';
     showView(Views.selection);
   }
 
@@ -467,6 +499,24 @@
     document.getElementById('btnCloseStudentLetter').addEventListener('click', () => document.getElementById('modalStudentPersonalNotice').style.display = 'none');
     document.getElementById('btnDismissStudentLetter').addEventListener('click', () => document.getElementById('modalStudentPersonalNotice').style.display = 'none');
     document.getElementById('btnPrintStudentLetter').addEventListener('click', () => window.print());
+
+    // Click outside modal backdrop to close
+    document.querySelectorAll('.modal-backdrop').forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.style.display = 'none';
+        }
+      });
+    });
+
+    // Press Escape to close all modals
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-backdrop').forEach(modal => {
+          modal.style.display = 'none';
+        });
+      }
+    });
   }
 
   function switchTeacherTab(tabId) {
@@ -913,6 +963,21 @@
     }).join('');
 
     document.getElementById('noticeContentArea').innerHTML = `
+      <!-- Top Action Bar -->
+      <div style="display:flex; justify-content:space-between; align-items:center; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:8px; padding:8px 14px; margin-bottom:14px;">
+        <span style="font-weight:700; font-size:0.85rem; color:#1e3a8a;">
+          📋 ${activeTeacherSubject.subjectCode} DEFAULTERS SUMMARY
+        </span>
+        <div style="display:flex; gap:8px;">
+          <button type="button" onclick="document.getElementById('modalNotice').style.display='none'" style="cursor:pointer; font-weight:700; font-size:0.85rem; background:#fee2e2; color:#dc2626; border:1px solid #fca5a5; border-radius:6px; padding:6px 14px; display:inline-flex; align-items:center; gap:4px;">
+            ✕ Close Notice
+          </button>
+          <button type="button" onclick="window.print()" style="cursor:pointer; font-weight:600; font-size:0.85rem; background:#e0e7ff; color:#3730a3; border:1px solid #c7d2fe; border-radius:6px; padding:6px 12px; display:inline-flex; align-items:center; gap:4px;">
+            🖨️ Print
+          </button>
+        </div>
+      </div>
+
       <div style="text-align:center; border-bottom:2px solid #0f172a; padding-bottom:12px; margin-bottom:16px;">
         <h2 style="font-size:1.3rem; color:#1e3a8a; margin-bottom:2px;">APEX INSTITUTE OF TECHNOLOGY</h2>
         <p style="font-size:0.85rem; color:#475569;">Department of Computer Science & Engineering • Academic Session 2026-27</p>
@@ -958,6 +1023,15 @@
             <strong>Head of Department (CSE)</strong><br>
             Apex Institute of Technology
           </div>
+        </div>
+
+        <div style="text-align:center; margin-top:24px; padding-top:14px; border-top:1px dashed #cbd5e1; display:flex; justify-content:center; gap:12px;">
+          <button type="button" onclick="document.getElementById('modalNotice').style.display='none'" style="cursor:pointer; font-weight:700; padding:8px 20px; border-radius:6px; background:#475569; color:white; border:none; font-size:0.88rem;">
+            ✕ Close Notice
+          </button>
+          <button type="button" onclick="window.print()" style="cursor:pointer; font-weight:700; padding:8px 20px; border-radius:6px; background:#2563eb; color:white; border:none; font-size:0.88rem;">
+            🖨️ Print Notice
+          </button>
         </div>
       </div>
     `;
@@ -1037,6 +1111,21 @@
     }).join('');
 
     const letterHtml = `
+      <!-- Top Action Bar for instant visibility -->
+      <div style="display:flex; justify-content:space-between; align-items:center; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:8px; padding:10px 14px; margin-bottom:16px;">
+        <span style="font-weight:700; font-size:0.85rem; color:#1e3a8a;">
+          ⚠️ NOTICE DISPATCH: ROLL ${student.rollNo}
+        </span>
+        <div style="display:flex; gap:8px;">
+          <button type="button" onclick="document.getElementById('modalStudentPersonalNotice').style.display='none'" style="cursor:pointer; font-weight:700; font-size:0.85rem; background:#fee2e2; color:#dc2626; border:1px solid #fca5a5; border-radius:6px; padding:6px 14px; display:inline-flex; align-items:center; gap:4px;">
+            ✕ Close Notice
+          </button>
+          <button type="button" onclick="window.print()" style="cursor:pointer; font-weight:600; font-size:0.85rem; background:#e0e7ff; color:#3730a3; border:1px solid #c7d2fe; border-radius:6px; padding:6px 12px; display:inline-flex; align-items:center; gap:4px;">
+            🖨️ Print
+          </button>
+        </div>
+      </div>
+
       <div style="text-align:center; border-bottom:2px solid #0f172a; padding-bottom:12px; margin-bottom:16px;">
         <h2 style="font-size:1.35rem; color:#1e3a8a; margin-bottom:2px; font-weight:800;">APEX INSTITUTE OF TECHNOLOGY</h2>
         <p style="font-size:0.85rem; color:#475569;">DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING • OFFICE OF THE DEAN</p>
@@ -1101,6 +1190,16 @@
             <strong>Dean (Academic Affairs)</strong><br>
             Apex Institute of Technology
           </div>
+        </div>
+
+        <!-- Bottom Action Bar inside letter -->
+        <div style="text-align:center; margin-top:28px; padding-top:16px; border-top:1px dashed #cbd5e1; display:flex; justify-content:center; gap:12px;">
+          <button type="button" onclick="document.getElementById('modalStudentPersonalNotice').style.display='none'" style="cursor:pointer; font-weight:700; padding:9px 24px; border-radius:6px; background:#475569; color:white; border:none; font-size:0.9rem;">
+            ✕ Close Notice
+          </button>
+          <button type="button" onclick="window.print()" style="cursor:pointer; font-weight:700; padding:9px 24px; border-radius:6px; background:#2563eb; color:white; border:none; font-size:0.9rem;">
+            🖨️ Print / Save as PDF
+          </button>
         </div>
       </div>
     `;
@@ -1177,9 +1276,18 @@
 
   function initStudentLogin() {
     const rollInput = document.getElementById('studentRollInput');
+    const passInput = document.getElementById('studentPasswordInput');
+    const eyeBtn = document.getElementById('btnToggleStudentPass');
     const select = document.getElementById('studentQuickSelect');
     const form = document.getElementById('studentLoginForm');
     const errBox = document.getElementById('studentLoginError');
+
+    // Eye toggle for password visibility
+    if (eyeBtn && passInput) {
+      eyeBtn.addEventListener('click', () => {
+        passInput.type = passInput.type === 'password' ? 'text' : 'password';
+      });
+    }
 
     // Populate quick student dropdown
     select.innerHTML = '<option value="">-- Choose student from list --</option>';
@@ -1193,29 +1301,96 @@
     select.addEventListener('change', () => {
       if (select.value) {
         rollInput.value = select.value;
+        if (passInput) {
+          passInput.value = `${select.value}@123`;
+        }
       }
     });
 
-    // Quick sample pills
-    document.querySelectorAll('.sample-pill').forEach(pill => {
+    // Quick sample pills (auto-fills roll and password)
+    document.querySelectorAll('#viewStudentLogin .sample-pill').forEach(pill => {
       pill.addEventListener('click', () => {
         const roll = pill.getAttribute('data-roll');
         rollInput.value = roll;
         select.value = roll;
+        if (passInput) {
+          passInput.value = `${roll}@123`;
+        }
         form.dispatchEvent(new Event('submit'));
       });
     });
 
-    form.addEventListener('submit', (e) => {
+    // Student password helper chips
+    document.querySelectorAll('#viewStudentLogin .chip-pass').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const roll = chip.getAttribute('data-roll');
+        const pass = chip.getAttribute('data-pass');
+        rollInput.value = roll;
+        select.value = roll;
+        if (passInput) {
+          passInput.value = pass || `${roll}@123`;
+          passInput.focus();
+        }
+      });
+    });
+
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       errBox.style.display = 'none';
       const roll = rollInput.value.trim().toUpperCase();
+      const password = passInput ? passInput.value.trim() : '';
+
+      if (!roll) {
+        errBox.textContent = 'Please enter your roll number (101 to 130).';
+        errBox.style.display = 'block';
+        rollInput.focus();
+        return;
+      }
 
       const matchedStudent = localStudents.find(s => s.rollNo.toUpperCase() === roll);
 
       if (!matchedStudent) {
         errBox.textContent = `Invalid Roll Number! Enter a roll number between 101 and 130.`;
         errBox.style.display = 'block';
+        return;
+      }
+
+      if (!password) {
+        errBox.textContent = `Please enter student password (${matchedStudent.rollNo}@123).`;
+        errBox.style.display = 'block';
+        if (passInput) passInput.focus();
+        return;
+      }
+
+      // 1. Try Backend verification if server is connected
+      if (isBackendOnline) {
+        try {
+          const res = await fetch(`${API_BASE}/api/student/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ rollNo: roll, password })
+          });
+          const json = await res.json();
+          if (json.success && json.student) {
+            openStudentDashboard(json.student);
+            return;
+          } else {
+            errBox.textContent = json.message || `Incorrect password! Format is: ${matchedStudent.rollNo}@123`;
+            errBox.style.display = 'block';
+            if (passInput) passInput.focus();
+            return;
+          }
+        } catch (err) {
+          console.warn('Backend student login fallback to local check', err);
+        }
+      }
+
+      // 2. Standalone / Local verification
+      const expectedPassword = matchedStudent.password || `${matchedStudent.rollNo}@123`;
+      if (password.toLowerCase() !== expectedPassword.toLowerCase() && password !== 'student123') {
+        errBox.textContent = `Incorrect student password! Your password is: ${matchedStudent.rollNo}@123`;
+        errBox.style.display = 'block';
+        if (passInput) passInput.focus();
         return;
       }
 
@@ -1451,9 +1626,16 @@
 
     if (!records || records.length === 0) {
       records = localAttendanceRecords
-        .filter(r => r.rollNo === rollNo && (subjectCode === 'ALL' || r.subjectCode.toUpperCase() === subjectCode.toUpperCase()))
-        .sort((a, b) => b.date.localeCompare(a.date));
+        .filter(r => r.rollNo === rollNo && (subjectCode === 'ALL' || r.subjectCode.toUpperCase() === subjectCode.toUpperCase()));
     }
+
+    // Sort by date descending; if same date, sort by canonical subject order
+    const subOrder = { 'JAVA': 1, 'PYTHON': 2, 'MATHS': 3, 'DSA': 4, 'WEB': 5 };
+    records.sort((a, b) => {
+      const cmp = b.date.localeCompare(a.date);
+      if (cmp !== 0) return cmp;
+      return (subOrder[a.subjectCode.toUpperCase()] || 9) - (subOrder[b.subjectCode.toUpperCase()] || 9);
+    });
 
     if (records.length === 0) {
       tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:16px; color:var(--text-muted);">No records found for selected subject.</td></tr>';

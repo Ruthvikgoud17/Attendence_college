@@ -64,6 +64,7 @@ public class AttendanceWebServer {
         server.createContext("/api/students", new StudentsHandler());
         server.createContext("/api/subjects", new SubjectsHandler());
         server.createContext("/api/teacher/login", new TeacherLoginHandler());
+        server.createContext("/api/student/login", new StudentLoginHandler());
         server.createContext("/api/attendance/summary", new StudentSummaryHandler());
         server.createContext("/api/attendance/history", new StudentHistoryHandler());
         server.createContext("/api/attendance/subject-percentages", new SubjectPercentagesHandler());
@@ -112,6 +113,11 @@ public class AttendanceWebServer {
                 System.out.println("Web server stopped successfully.");
             }));
 
+            // Keep server running continuously
+            Thread.currentThread().join();
+
+        } catch (InterruptedException ignored) {
+            // Server thread interrupted on shutdown
         } catch (IOException e) {
             System.err.println("Failed to start Web Server: " + e.getMessage());
             e.printStackTrace();
@@ -270,6 +276,49 @@ public class AttendanceWebServer {
         }
     }
 
+    private class StudentLoginHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            if (handleCors(exchange)) return;
+            if (!"POST".equalsIgnoreCase(exchange.getRequestMethod())) {
+                sendResponse(exchange, 405, "application/json", "{\"error\":\"Method Not Allowed\"}");
+                return;
+            }
+
+            String body = readRequestBody(exchange);
+            Map<String, String> params = parseJsonSimple(body);
+            String rollNo = params.getOrDefault("rollNo", "").trim().toUpperCase();
+            String password = params.getOrDefault("password", "").trim();
+
+            if (rollNo.isEmpty()) {
+                sendResponse(exchange, 400, "application/json", "{\"success\":false,\"message\":\"Roll number is required.\"}");
+                return;
+            }
+
+            Optional<Student> opt = service.getStudent(rollNo);
+            if (opt.isEmpty()) {
+                sendResponse(exchange, 404, "application/json", "{\"success\":false,\"message\":\"Invalid Roll Number! No student found with Roll No: " + escapeJson(rollNo) + "\"}");
+                return;
+            }
+
+            Student student = opt.get();
+            String expectedPassword = student.getRollNo() + "@123";
+
+            if (password.equalsIgnoreCase(expectedPassword) || password.equals("student123")) {
+                StringBuilder sb = new StringBuilder();
+                sb.append("{")
+                  .append("\"success\":true,")
+                  .append("\"student\":").append(studentToJson(student)).append(",")
+                  .append("\"message\":\"Authentication successful! Welcome, " + escapeJson(student.getName()) + "\"")
+                  .append("}");
+                sendResponse(exchange, 200, "application/json", sb.toString());
+            } else {
+                sendResponse(exchange, 401, "application/json", 
+                        "{\"success\":false,\"message\":\"Incorrect student password! Default password format is " + escapeJson(expectedPassword) + "\"}");
+            }
+        }
+    }
+
     private class StudentSummaryHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
@@ -345,9 +394,14 @@ public class AttendanceWebServer {
             if (subjectCode != null && !subjectCode.trim().isEmpty() && !subjectCode.equalsIgnoreCase("ALL")) {
                 records = service.getStudentSubjectHistory(rollNo.trim(), subjectCode.trim());
             } else {
+                List<String> subOrder = List.of("JAVA", "PYTHON", "MATHS", "DSA", "WEB");
                 records = service.getAllAttendanceRecords().stream()
                         .filter(r -> r.getRollNo().equalsIgnoreCase(rollNo.trim()))
-                        .sorted(Comparator.comparing(AttendanceRecord::getDate).reversed())
+                        .sorted(Comparator.comparing(AttendanceRecord::getDate).reversed()
+                                .thenComparingInt(r -> {
+                                    int idx = subOrder.indexOf(r.getSubjectCode().toUpperCase());
+                                    return idx >= 0 ? idx : 99;
+                                }))
                         .collect(Collectors.toList());
             }
 
@@ -662,7 +716,8 @@ public class AttendanceWebServer {
                 "\"rollNo\":\"" + escapeJson(s.getRollNo()) + "\"," +
                 "\"name\":\"" + escapeJson(s.getName()) + "\"," +
                 "\"department\":\"" + escapeJson(s.getDepartment()) + "\"," +
-                "\"yearSection\":\"" + escapeJson(s.getYearSection()) + "\"" +
+                "\"yearSection\":\"" + escapeJson(s.getYearSection()) + "\"," +
+                "\"password\":\"" + escapeJson(s.getRollNo() + "@123") + "\"" +
                 "}";
     }
 

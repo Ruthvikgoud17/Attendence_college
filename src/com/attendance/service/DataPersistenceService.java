@@ -123,7 +123,7 @@ public class DataPersistenceService {
         }
 
         // 1. Add 5 Subjects with 5 Different Teachers and Passwords (password = subject name)
-        service.addSubject(new Subject("JAVA",   "Java Programming",         "Prof. Venkat", "java"));
+        service.addSubject(new Subject("JAVA",   "Java Programming",         "Dr. Naga Padmaja", "java"));
         service.addSubject(new Subject("PYTHON", "Python Programming",       "Dr. Rajesh",   "python"));
         service.addSubject(new Subject("MATHS",  "Engineering Mathematics",  "Dr. Sharma",   "maths"));
         service.addSubject(new Subject("DSA",    "Data Structures & Algo",   "Prof. Priya",  "dsa"));
@@ -167,12 +167,12 @@ public class DataPersistenceService {
             service.addStudent(new Student(st[0], st[1], "CSE", "3rd Year / A"));
         }
 
-        // 3. Seed 10 Days of Attendance across all 5 subjects
-        LocalDate baseDate = LocalDate.now().minusDays(12);
+        // 3. Seed 10 Days of Attendance across all 5 subjects ending on today (present day)
+        LocalDate today = LocalDate.now();
         String[] subjects = {"JAVA", "PYTHON", "MATHS", "DSA", "WEB"};
 
-        for (int day = 0; day < 10; day++) {
-            LocalDate dt = baseDate.plusDays(day);
+        for (int day = 9; day >= 0; day--) {
+            LocalDate dt = today.minusDays(day);
 
             for (String sub : subjects) {
                 for (int i = 0; i < studentsData.length; i++) {
@@ -180,18 +180,31 @@ public class DataPersistenceService {
                     int studentIndex = i + 1; // 1 to 30
 
                     boolean isAbsent = false;
-                    if (studentIndex >= 26) {
-                        // Shortage group (<65% attendance)
-                        isAbsent = (day % 2 == 0) || (day == 1);
-                    } else if (studentIndex >= 21) {
-                        // Borderline group (~70% attendance)
-                        isAbsent = (day == 2 || day == 5 || day == 8);
-                    } else if (studentIndex >= 6) {
-                        // Regular group (80-90% attendance)
-                        isAbsent = (day == 4 && (studentIndex % 2 == 0));
+                    if (day == 0) {
+                        // Present day: all 5 subjects actively recorded!
+                        if (studentIndex >= 26) {
+                            isAbsent = ("MATHS".equals(sub) || "DSA".equals(sub));
+                        } else if (studentIndex >= 21) {
+                            isAbsent = ("DSA".equals(sub) && studentIndex % 2 == 0);
+                        } else if (studentIndex == 9 && "MATHS".equals(sub)) {
+                            isAbsent = true;
+                        } else {
+                            isAbsent = false; // Students 101-120 100% Present on today
+                        }
                     } else {
-                        // High group (~100% attendance)
-                        isAbsent = (day == 3 && studentIndex == 4);
+                        if (studentIndex >= 26) {
+                            // Shortage group (<65% attendance)
+                            isAbsent = (day % 2 == 0) || (day == 1);
+                        } else if (studentIndex >= 21) {
+                            // Borderline group (~70% attendance)
+                            isAbsent = (day == 2 || day == 5 || day == 8);
+                        } else if (studentIndex >= 6) {
+                            // Regular group (80-90% attendance)
+                            isAbsent = (day == 4 && (studentIndex % 2 == 0));
+                        } else {
+                            // High group (~100% attendance)
+                            isAbsent = (day == 3 && studentIndex == 4);
+                        }
                     }
 
                     String status = isAbsent ? "Absent" : "Present";

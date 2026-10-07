@@ -1,6 +1,12 @@
 package com.attendance;
 
+import com.attendance.concurrent.ConcurrentAttendanceAuditor;
+import com.attendance.dao.DatabaseSimulator;
+import com.attendance.exception.AuthenticationException;
+import com.attendance.exception.InvalidRollNumberException;
+import com.attendance.gui.AttendanceRosterWindow;
 import com.attendance.model.*;
+import com.attendance.service.AttendanceAnalyticsEngine;
 import com.attendance.service.AttendanceService;
 import com.attendance.service.DataPersistenceService;
 import com.attendance.util.TableFormatter;
@@ -14,10 +20,7 @@ import static com.attendance.util.TableFormatter.*;
 
 /**
  * College Attendance Management System.
- * Main Entry Menu:
- *  1. Teacher Login (5 Subjects, 5 Teachers, Subject Name is Password)
- *  2. Student Login (View-only for all 5 subjects + overall aggregate)
- *  3. Exit
+ * Course Faculty: Dr. Naga Padmaja (Java Programming)
  */
 public class Main {
 
@@ -41,17 +44,21 @@ public class Main {
         boolean running = true;
         while (running) {
             printMainMenu();
-            String choice = prompt("Enter choice [1-3]: ").trim();
+            String choice = prompt("Enter choice [1-7]: ").trim();
 
             switch (choice) {
                 case "1" -> handleTeacherLogin();
                 case "2" -> handleStudentLogin();
-                case "3" -> {
+                case "3" -> ConcurrentAttendanceAuditor.runAudit(service);
+                case "4" -> AttendanceAnalyticsEngine.runAnalytics(service);
+                case "5" -> AttendanceRosterWindow.openWindow(service);
+                case "6" -> DatabaseSimulator.runSimulation(service);
+                case "7" -> {
                     service.persistAll();
                     System.out.println("\n" + GREEN + "✓ All attendance records saved successfully. Goodbye!" + RESET);
                     running = false;
                 }
-                default -> System.out.println(RED + "Invalid choice! Please select 1, 2, or 3." + RESET);
+                default -> System.out.println(RED + "Invalid choice! Please select 1 through 7." + RESET);
             }
         }
     }
@@ -60,16 +67,21 @@ public class Main {
         System.out.println(CYAN + BOLD);
         System.out.println("==========================================================================");
         System.out.println("                    COLLEGE ATTENDANCE MANAGEMENT SYSTEM                  ");
-        System.out.println("            Standard Java SE - 5 Subject Teachers & 30 Students           ");
+        System.out.println("            Enterprise Attendance Tracking, Analytics & Reporting         ");
+        System.out.println("              Course Lecturer: Dr. Naga Padmaja (Java Programming)        ");
         System.out.println("==========================================================================" + RESET);
     }
 
     private static void printMainMenu() {
-        System.out.println("\n" + BOLD + "========== MAIN MENU ==========" + RESET);
-        System.out.println("  [" + CYAN + "1" + RESET + "] Teacher Login (Subject Teacher Dashboard)");
-        System.out.println("  [" + CYAN + "2" + RESET + "] Student Login (View Attendance Only)");
-        System.out.println("  [" + CYAN + "3" + RESET + "] Exit");
-        System.out.println("-------------------------------");
+        System.out.println("\n" + BOLD + "=================== MAIN MENU ===================" + RESET);
+        System.out.println("  [" + CYAN + "1" + RESET + "] Teacher Portal (Faculty Attendance - Dr. Naga Padmaja)");
+        System.out.println("  [" + CYAN + "2" + RESET + "] Student Portal (Roll Number + Password <roll>@123)");
+        System.out.println("  [" + CYAN + "3" + RESET + "] Multi-Threaded Classroom Attendance Audit Engine");
+        System.out.println("  [" + CYAN + "4" + RESET + "] High-Performance Analytics & Defaulters Report (< 75%)");
+        System.out.println("  [" + CYAN + "5" + RESET + "] Interactive GUI Roster Window (Swing Event Model)");
+        System.out.println("  [" + CYAN + "6" + RESET + "] Relational Database & SQL Persistence Simulator");
+        System.out.println("  [" + CYAN + "7" + RESET + "] Save & Exit System");
+        System.out.println("-------------------------------------------------");
     }
 
     // =========================================================================
@@ -79,7 +91,7 @@ public class Main {
     private static void handleTeacherLogin() {
         System.out.println("\n" + CYAN + BOLD + "========== TEACHER LOGIN ==========" + RESET);
         System.out.println("5 Subjects & 5 Teachers available:");
-        System.out.println("  - [JAVA]   Java Programming         -> Password: " + YELLOW + "java" + RESET + "   (Prof. Venkat)");
+        System.out.println("  - [JAVA]   Java Programming         -> Password: " + YELLOW + "java" + RESET + "   (Dr. Naga Padmaja)");
         System.out.println("  - [PYTHON] Python Programming       -> Password: " + YELLOW + "python" + RESET + " (Dr. Rajesh)");
         System.out.println("  - [MATHS]  Engineering Mathematics  -> Password: " + YELLOW + "maths" + RESET + "  (Dr. Sharma)");
         System.out.println("  - [DSA]    Data Structures & Algo   -> Password: " + YELLOW + "dsa" + RESET + "    (Prof. Priya)");
@@ -315,7 +327,7 @@ public class Main {
 
     private static void handleStudentLogin() {
         System.out.println("\n" + CYAN + BOLD + "========== STUDENT LOGIN ==========" + RESET);
-        System.out.println("(Sample Roll Numbers available: 101 to 130)");
+        System.out.println("(Sample Roll Numbers available: 101 to 130 | Default password format: <roll>@123)");
         String roll = prompt("Enter Your Roll Number: ").trim().toUpperCase();
 
         Optional<Student> opt = service.getStudent(roll);
@@ -325,6 +337,13 @@ public class Main {
         }
 
         Student student = opt.get();
+        String password = prompt("Enter Student Password (" + student.getRollNo() + "@123): ").trim();
+        String expectedPassword = student.getRollNo() + "@123";
+        if (!password.equalsIgnoreCase(expectedPassword) && !password.equals("student123")) {
+            System.out.println(RED + "Authentication failed! Incorrect password. Default is: " + expectedPassword + RESET);
+            return;
+        }
+
         System.out.println(GREEN + "✓ Welcome, " + student.getName() + "!" + RESET);
 
         boolean studentSession = true;

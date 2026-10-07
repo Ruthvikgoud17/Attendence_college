@@ -36,7 +36,7 @@
 
         <!-- Dynamic User Badge & Logout Button (Visible only when logged in) -->
         <div class="user-session-bar" id="userSessionBar" style="display: none;">
-          <span class="session-user-badge" id="sessionUserBadge">Faculty: Prof. Venkat</span>
+          <span class="session-user-badge" id="sessionUserBadge">Faculty: Dr. Naga Padmaja</span>
           <button class="btn btn-logout" id="btnLogout">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
             <span>Logout</span>
@@ -129,7 +129,7 @@
             <div class="form-group">
               <label for="teacherSubjectSelect" class="form-label">Subject & Faculty Member:</label>
               <select id="teacherSubjectSelect" class="form-select">
-                <option value="JAVA">Java Programming (Prof. Venkat) - pass: java</option>
+                <option value="JAVA">Java Programming (Dr. Naga Padmaja) - pass: java</option>
                 <option value="PYTHON">Python Programming (Dr. Rajesh) - pass: python</option>
                 <option value="MATHS">Engineering Mathematics (Dr. Sharma) - pass: maths</option>
                 <option value="DSA">Data Structures & Algo (Prof. Priya) - pass: dsa</option>
@@ -182,7 +182,7 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
             </div>
             <h2 class="login-title">Student Portal Login</h2>
-            <p class="login-subtitle">Enter your roll number to view personal attendance records</p>
+            <p class="login-subtitle">Enter your roll number and password (<code>[rollno]@123</code>) to view personal attendance</p>
           </div>
 
           <form id="studentLoginForm" onsubmit="return false;">
@@ -190,6 +190,15 @@
             <div class="form-group">
               <label for="studentRollInput" class="form-label">Student Roll Number (101 to 130):</label>
               <input type="text" id="studentRollInput" class="form-control" placeholder="Enter Roll Number (e.g. 101, 102...)" required autofocus maxlength="5">
+            </div>
+
+            <div class="form-group">
+              <label for="studentPasswordInput" class="form-label">Student Password:</label>
+              <div class="password-input-wrap">
+                <input type="password" id="studentPasswordInput" class="form-control" placeholder="Enter password (e.g. 101@123)" required autocomplete="current-password">
+                <button type="button" class="btn-toggle-eye" id="btnToggleStudentPass" title="Show/Hide Password">👁</button>
+              </div>
+              <small class="form-hint" style="color: var(--text-muted); font-size: 0.82rem; margin-top: 4px; display: block;">Format: <code>&lt;RollNumber&gt;@123</code> &bull; e.g. Roll 101 &rarr; <code>101@123</code></small>
             </div>
 
             <div class="form-group">
@@ -202,12 +211,24 @@
 
             <!-- Quick sample student buttons -->
             <div class="quick-sample-box">
-              <span class="sample-label">Quick Sample Students:</span>
+              <span class="sample-label">Quick Sample Students (Auto-fills Roll &amp; Password):</span>
               <div class="sample-pills">
                 <button type="button" class="sample-pill" data-roll="101">101 - Aarav Sharma (Top 100%)</button>
                 <button type="button" class="sample-pill" data-roll="102">102 - Bhavna Patel (Regular 85%)</button>
                 <button type="button" class="sample-pill sample-pill-warning" data-roll="121">121 - Uday Chauhan (Borderline ~70%)</button>
-                <button type="button" class="sample-pill sample-pill-danger" data-roll="126">126 - Zoya Siddiqui (Defaulter <60%)</button>
+                <button type="button" class="sample-pill sample-pill-danger" data-roll="126">126 - Zoya Siddiqui (Defaulter &lt;60%)</button>
+              </div>
+            </div>
+
+            <!-- Password helper reminder -->
+            <div class="password-helper-alert" style="margin-top: 14px;">
+              <div class="helper-title">Student Password Policy:</div>
+              <div class="helper-sub">Every student's password is their <strong>Roll Number + <code>@123</code></strong></div>
+              <div class="helper-pills" style="margin-top: 8px;">
+                <button type="button" class="chip-pass" data-roll="101" data-pass="101@123">101: <code>101@123</code></button>
+                <button type="button" class="chip-pass" data-roll="102" data-pass="102@123">102: <code>102@123</code></button>
+                <button type="button" class="chip-pass" data-roll="121" data-pass="121@123">121: <code>121@123</code></button>
+                <button type="button" class="chip-pass" data-roll="126" data-pass="126@123">126: <code>126@123</code></button>
               </div>
             </div>
 
@@ -215,7 +236,7 @@
 
             <div class="login-buttons-row">
               <button type="button" class="btn btn-secondary" id="btnBackFromStudentLogin">&larr; Back</button>
-              <button type="submit" class="btn btn-success" id="btnSubmitStudentLogin">View My Attendance</button>
+              <button type="submit" class="btn btn-success" id="btnSubmitStudentLogin">Login to Student Portal</button>
             </div>
 
           </form>
@@ -232,13 +253,13 @@
       <!-- Teacher Info Banner -->
       <div class="dashboard-banner">
         <div class="banner-left">
-          <div class="banner-avatar" id="tDashAvatar">TV</div>
+          <div class="banner-avatar" id="tDashAvatar">NP</div>
           <div class="banner-info">
             <div class="banner-tags">
               <span class="tag-subject" id="tDashSubCode">JAVA</span>
               <span class="tag-dept">CSE 3rd Year / Section A</span>
             </div>
-            <h1 class="banner-name" id="tDashFacultyName">Prof. Venkat</h1>
+            <h1 class="banner-name" id="tDashFacultyName">Dr. Naga Padmaja</h1>
             <p class="banner-course" id="tDashSubName">Course: Java Programming</p>
           </div>
         </div>
@@ -247,7 +268,7 @@
           <div class="subject-switcher-dropdown">
             <label for="tDashSubjectSwitcher" class="switch-label">Switch Subject Teacher:</label>
             <select id="tDashSubjectSwitcher" class="form-select form-select-sm">
-              <option value="JAVA">JAVA - Java Programming (Prof. Venkat)</option>
+              <option value="JAVA">JAVA - Java Programming (Dr. Naga Padmaja)</option>
               <option value="PYTHON">PYTHON - Python Programming (Dr. Rajesh)</option>
               <option value="MATHS">MATHS - Engineering Maths (Dr. Sharma)</option>
               <option value="DSA">DSA - Data Structures & Algo (Prof. Priya)</option>
@@ -697,15 +718,15 @@
   <div class="modal-backdrop" id="modalNotice" style="display: none;">
     <div class="modal-dialog">
       <div class="modal-header">
-        <h3 class="modal-title">Official Department Defaulters Notice</h3>
-        <button type="button" class="modal-close" id="btnCloseNotice">&times;</button>
+        <h3 class="modal-title">📋 Official Department Defaulters Notice</h3>
+        <button type="button" class="modal-close" id="btnCloseNotice" title="Close Notice (Esc)" aria-label="Close">&times;</button>
       </div>
       <div class="modal-body print-letterhead" id="noticeContentArea">
         <!-- JS rendered official warning letterhead -->
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" id="btnDismissNotice">Close</button>
-        <button type="button" class="btn btn-primary" id="btnPrintNoticeModal">Print Letterhead</button>
+        <button type="button" class="btn btn-secondary" id="btnDismissNotice" style="font-weight:700;">✕ Close</button>
+        <button type="button" class="btn btn-primary" id="btnPrintNoticeModal">🖨️ Print Letterhead</button>
       </div>
     </div>
   </div>
@@ -714,14 +735,14 @@
   <div class="modal-backdrop" id="modalStudentPersonalNotice" style="display: none;">
     <div class="modal-dialog modal-dialog-lg">
       <div class="modal-header">
-        <h3 class="modal-title">Official Student Attendance Shortage Warning Letter</h3>
-        <button type="button" class="modal-close" id="btnCloseStudentLetter">&times;</button>
+        <h3 class="modal-title">⚠️ Official Student Attendance Shortage Warning Letter</h3>
+        <button type="button" class="modal-close" id="btnCloseStudentLetter" title="Close Notice (Esc)" aria-label="Close">&times;</button>
       </div>
       <div class="modal-body print-letterhead" id="studentLetterContentArea">
         <!-- Rendered with personalized student warning notice -->
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" id="btnDismissStudentLetter">Close</button>
+        <button type="button" class="btn btn-secondary" id="btnDismissStudentLetter" style="font-weight:700;">✕ Close</button>
         <button type="button" class="btn btn-primary" id="btnPrintStudentLetter">🖨️ Print / Save as PDF</button>
       </div>
     </div>

@@ -456,11 +456,17 @@
     // Daily Register Load
     document.getElementById('btnLoadDailyRegister').addEventListener('click', loadDailyRegisterData);
 
-    // Defaulters Warning Notice
+    // Defaulters Warning Notice & Dispatch
+    document.getElementById('btnDispatchNotices').addEventListener('click', dispatchNoticesToStudents);
     document.getElementById('btnPrintDefaultersNotice').addEventListener('click', openNoticeModal);
     document.getElementById('btnCloseNotice').addEventListener('click', () => document.getElementById('modalNotice').style.display = 'none');
     document.getElementById('btnDismissNotice').addEventListener('click', () => document.getElementById('modalNotice').style.display = 'none');
     document.getElementById('btnPrintNoticeModal').addEventListener('click', () => window.print());
+
+    // Student Personal Letter Modal Handlers
+    document.getElementById('btnCloseStudentLetter').addEventListener('click', () => document.getElementById('modalStudentPersonalNotice').style.display = 'none');
+    document.getElementById('btnDismissStudentLetter').addEventListener('click', () => document.getElementById('modalStudentPersonalNotice').style.display = 'none');
+    document.getElementById('btnPrintStudentLetter').addEventListener('click', () => window.print());
   }
 
   function switchTeacherTab(tabId) {
@@ -959,6 +965,150 @@
     document.getElementById('modalNotice').style.display = 'flex';
   }
 
+  async function dispatchNoticesToStudents() {
+    let defaulters = [];
+    if (isBackendOnline) {
+      try {
+        const res = await fetch(`${API_BASE}/api/attendance/defaulters?subjectCode=${activeTeacherSubject.subjectCode}&threshold=75`);
+        if (res.ok) {
+          const json = await res.json();
+          defaulters = json.defaulters;
+        }
+      } catch (e) {}
+    }
+
+    if (!defaulters || defaulters.length === 0) {
+      const uniqueHeld = new Set(localAttendanceRecords
+        .filter(r => r.subjectCode.toUpperCase() === activeTeacherSubject.subjectCode.toUpperCase())
+        .map(r => r.date)).size;
+
+      localStudents.forEach(stu => {
+        const subRecs = localAttendanceRecords.filter(r => r.rollNo === stu.rollNo && r.subjectCode.toUpperCase() === activeTeacherSubject.subjectCode.toUpperCase());
+        const attended = subRecs.filter(r => r.isPresent).length;
+        if (uniqueHeld > 0 && ((attended / uniqueHeld) * 100.0) < 75.0) {
+          defaulters.push({
+            student: stu,
+            summary: {
+              percentage: (attended / uniqueHeld) * 100.0,
+              classesNeededFor75: computeClassesNeeded(uniqueHeld, attended)
+            }
+          });
+        }
+      });
+    }
+
+    const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    const dispatched = JSON.parse(localStorage.getItem('apex_dispatched_notices') || '[]');
+    dispatched.push({
+      subjectCode: activeTeacherSubject.subjectCode,
+      subjectName: activeTeacherSubject.subjectName,
+      facultyName: activeTeacherSubject.facultyName,
+      date: today,
+      defaulterRolls: defaulters.map(d => d.student.rollNo)
+    });
+    localStorage.setItem('apex_dispatched_notices', JSON.stringify(dispatched));
+
+    const namesList = defaulters.map(d => `${d.student.name} (#${d.student.rollNo})`).join(', ');
+    alert(`📢 WARNING NOTICES DISPATCHED TO STUDENT DASHBOARDS!\n\nOfficial attendance warning notices have been served directly to the student dashboards of ${defaulters.length} defaulter student(s) in ${activeTeacherSubject.subjectName}:\n\n${namesList}\n\nWhen these students log into their student portal, the official warning banner and personalized letter will be displayed directly on their dashboard.`);
+  }
+
+  function openStudentPersonalWarningLetter(student, shortageSubjects, aggregate) {
+    const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    
+    let subjectRows = shortageSubjects.map(s => {
+      const held = s.totalClasses;
+      const attended = s.presentClasses;
+      const pct = parseFloat(s.percentage).toFixed(1);
+      const deficit = (75.0 - parseFloat(s.percentage)).toFixed(1);
+      const needed = s.classesNeededFor75;
+      const faculty = s.facultyName || (localSubjects.find(sub => sub.subjectCode === s.subjectCode) || {}).facultyName || 'Course Faculty';
+
+      return `
+        <tr>
+          <td style="padding:8px 10px; border:1px solid #cbd5e1; font-weight:bold;">${s.subjectCode} - ${s.subjectName}</td>
+          <td style="padding:8px 10px; border:1px solid #cbd5e1;">${faculty}</td>
+          <td style="padding:8px 10px; border:1px solid #cbd5e1; text-align:center;">${held}</td>
+          <td style="padding:8px 10px; border:1px solid #cbd5e1; text-align:center; color:#16a34a; font-weight:bold;">${attended}</td>
+          <td style="padding:8px 10px; border:1px solid #cbd5e1; text-align:center; color:#dc2626; font-weight:bold;">${pct}%</td>
+          <td style="padding:8px 10px; border:1px solid #cbd5e1; text-align:center; color:#dc2626; font-weight:bold;">-${deficit}%</td>
+          <td style="padding:8px 10px; border:1px solid #cbd5e1; text-align:center; color:#b91c1c; font-weight:bold;">+${needed} consecutive classes</td>
+        </tr>
+      `;
+    }).join('');
+
+    const letterHtml = `
+      <div style="text-align:center; border-bottom:2px solid #0f172a; padding-bottom:12px; margin-bottom:16px;">
+        <h2 style="font-size:1.35rem; color:#1e3a8a; margin-bottom:2px; font-weight:800;">APEX INSTITUTE OF TECHNOLOGY</h2>
+        <p style="font-size:0.85rem; color:#475569;">DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING • OFFICE OF THE DEAN</p>
+        <p style="font-size:0.8rem; color:#64748b; margin-top:2px;">
+          Ref No: AIT/CSE/WARN/2026/ROLL-${student.rollNo} | Issuance Date: ${today}
+        </p>
+      </div>
+
+      <div style="font-family:serif; line-height:1.6; font-size:0.92rem; color:#0f172a;">
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:12px 16px; border-radius:6px; margin-bottom:16px;">
+          <p><strong>TO CANDIDATE:</strong> ${student.name.toUpperCase()} (Roll No: ${student.rollNo})</p>
+          <p><strong>PROGRAM / SECTION:</strong> B.Tech CSE (3rd Year / Section A)</p>
+          <p><strong>CURRENT AGGREGATE ATTENDANCE:</strong> <span style="color:#dc2626; font-weight:bold;">${aggregate.percentage}%</span></p>
+        </div>
+
+        <h3 style="text-align:center; text-decoration:underline; margin:16px 0 12px; font-size:1.1rem; color:#991b1b;">
+          OFFICIAL STATUTORY WARNING NOTICE: ATTENDANCE SHORTAGE (&lt; 75%)
+        </h3>
+
+        <p style="margin-bottom:10px;">
+          Dear <strong>${student.name}</strong>,
+        </p>
+
+        <p style="margin-bottom:12px; text-align:justify;">
+          This is an official communication served to your student portal under <strong>Ordinance Clause 12.4 of University Academic Regulations</strong>. You have registered an attendance shortfall below the mandatory <strong>75%</strong> requirement in the course(s) listed below:
+        </p>
+
+        <table style="width:100%; border-collapse:collapse; margin:14px 0 16px; font-size:0.85rem;">
+          <thead>
+            <tr style="background:#f1f5f9;">
+              <th style="padding:8px 10px; border:1px solid #cbd5e1;">Curriculum Course</th>
+              <th style="padding:8px 10px; border:1px solid #cbd5e1;">Faculty In-Charge</th>
+              <th style="padding:8px 10px; border:1px solid #cbd5e1;">Held</th>
+              <th style="padding:8px 10px; border:1px solid #cbd5e1;">Attended</th>
+              <th style="padding:8px 10px; border:1px solid #cbd5e1;">Current %</th>
+              <th style="padding:8px 10px; border:1px solid #cbd5e1;">Deficit</th>
+              <th style="padding:8px 10px; border:1px solid #cbd5e1;">Required Consecutive Recovery</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${subjectRows}
+          </tbody>
+        </table>
+
+        <div style="background:#fef2f2; border-left:4px solid #dc2626; padding:10px 14px; margin-bottom:14px; font-size:0.86rem; color:#7f1d1d;">
+          <strong>CRITICAL DIRECTIVE:</strong>
+          Failure to satisfy the mandatory 75% attendance criterion before the end of the semester will result in <strong>withholding of your Semester End Examination Admit Card / Hall Ticket</strong>. You will NOT be permitted to sit for theory or practical examinations without formal condonation from the Academic Council.
+        </div>
+
+        <p style="font-size:0.88rem; margin-bottom:24px;">
+          You are hereby advised to attend all upcoming classroom and laboratory sessions consecutively to make up for the deficit and report to your respective Course Teacher.
+        </p>
+
+        <div style="display:flex; justify-content:space-between; margin-top:36px; padding-top:12px;">
+          <div>
+            ____________________________________<br>
+            <strong>Subject Faculty In-Charge</strong><br>
+            Department of CSE
+          </div>
+          <div style="text-align:right;">
+            ____________________________________<br>
+            <strong>Dean (Academic Affairs)</strong><br>
+            Apex Institute of Technology
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('studentLetterContentArea').innerHTML = letterHtml;
+    document.getElementById('modalStudentPersonalNotice').style.display = 'flex';
+  }
+
   async function loadDailyRegisterData() {
     const date = document.getElementById('inspectDateInput').value;
     const tbody = document.getElementById('tbodyDailyRegister');
@@ -1174,6 +1324,23 @@
       document.getElementById('sDashVerdictIcon').textContent = '⚠️';
       document.getElementById('sDashVerdictTitle').textContent = 'ATTENDANCE SHORTAGE CAUTION (< 75%)';
       document.getElementById('sDashVerdictDesc').textContent = 'Your cumulative attendance across curriculum subjects is below the mandatory 75% threshold. Semester hall ticket issuance is subject to institutional condonation approval.';
+    }
+
+    // Check if student has attendance shortage in ANY subject (< 75%)
+    const shortageSubjects = summaryData.summaries.filter(s => !s.isEligible || parseFloat(s.percentage) < 75.0);
+    const noticeCard = document.getElementById('studentNoticeAlertCard');
+
+    if (shortageSubjects.length > 0) {
+      noticeCard.style.display = 'flex';
+      const subNames = shortageSubjects.map(s => `${s.subjectName} (${parseFloat(s.percentage).toFixed(1)}%)`).join(', ');
+      document.getElementById('snacNoticeDesc').innerHTML = 
+        `You have received an official attendance shortage warning letter for: <strong>${subNames}</strong>. Click below to inspect and print your official warning letter.`;
+
+      document.getElementById('btnOpenStudentPersonalLetter').onclick = () => {
+        openStudentPersonalWarningLetter(student, shortageSubjects, summaryData.aggregate);
+      };
+    } else {
+      noticeCard.style.display = 'none';
     }
 
     // Render 5 Subject Cards

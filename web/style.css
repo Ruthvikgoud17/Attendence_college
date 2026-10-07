@@ -1343,6 +1343,64 @@ body {
 .verdict-shortage .verdict-heading { color: #991b1b; }
 .verdict-shortage .verdict-description { color: #7f1d1d; }
 
+/* Student Direct Notice Alert Card */
+.student-notice-alert-card {
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  border-left: 5px solid #e11d48;
+  border-radius: var(--radius-sm);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(225, 29, 72, 0.08);
+  flex-wrap: wrap;
+}
+
+.snac-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+  min-width: 260px;
+}
+
+.snac-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.snac-badge {
+  display: inline-block;
+  background: #be123c;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.03em;
+  margin-bottom: 4px;
+}
+
+.snac-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #9f1239;
+  line-height: 1.2;
+}
+
+.snac-desc {
+  font-size: 0.85rem;
+  color: #881337;
+  margin-top: 2px;
+}
+
+.modal-dialog-lg {
+  max-width: 760px;
+}
+
 .verdict-icon {
   font-size: 2rem;
 }

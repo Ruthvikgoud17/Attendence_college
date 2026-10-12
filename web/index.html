@@ -57,7 +57,7 @@
         <div class="welcome-box">
           <h1 class="portal-main-heading">College Attendance Management System</h1>
           <p class="portal-main-desc">
-            Welcome to the official academic attendance management system for 3rd Year B.Tech Computer Science & Engineering. Please select your role to proceed:
+            Welcome to the official academic attendance management system for 2-1 Sem B.Tech Computer Science & Engineering. Please select your role to proceed:
           </p>
         </div>
 
@@ -129,18 +129,18 @@
             <div class="form-group">
               <label for="teacherSubjectSelect" class="form-label">Subject & Faculty Member:</label>
               <select id="teacherSubjectSelect" class="form-select">
-                <option value="JAVA">Java Programming (Dr. Naga Padmaja) - pass: java</option>
-                <option value="PYTHON">Python Programming (Dr. Rajesh) - pass: python</option>
-                <option value="MATHS">Engineering Mathematics (Dr. Sharma) - pass: maths</option>
-                <option value="DSA">Data Structures & Algo (Prof. Priya) - pass: dsa</option>
-                <option value="WEB">Web Technologies (Prof. Arun) - pass: web</option>
+                <option value="OOPS">OOPS - Object Oriented Programming (DR.J.Naga Padmaja) - pass: oops</option>
+                <option value="OSS">OSS - Operating Systems (Kavitha Chitrala) - pass: oss</option>
+                <option value="BEFA">BEFA - Business Economics & Financial Analysis (Sallapalle Archana) - pass: befa</option>
+                <option value="DMS">DMS - Discrete Mathematics (DhanaLakshmi Dumpala) - pass: dms</option>
+                <option value="DBMS">DBMS - Database Management Systems (Prasada Reddy G S) - pass: dbms</option>
               </select>
             </div>
 
             <div class="form-group">
               <label for="teacherPasswordInput" class="form-label">Password:</label>
               <div class="password-input-wrap">
-                <input type="password" id="teacherPasswordInput" class="form-control" placeholder="Enter password (e.g. java, python...)" required autofocus>
+                <input type="password" id="teacherPasswordInput" class="form-control" placeholder="Enter password (e.g. oops, oss...)" required autofocus>
                 <button type="button" class="btn-toggle-eye" id="btnToggleTeacherPass" title="Show/Hide Password">👁</button>
               </div>
             </div>
@@ -149,11 +149,11 @@
             <div class="password-helper-alert">
               <div class="helper-title">Faculty Passwords:</div>
               <div class="helper-pills">
-                <button type="button" class="chip-pass" data-sub="JAVA" data-pass="java">JAVA: <code>java</code></button>
-                <button type="button" class="chip-pass" data-sub="PYTHON" data-pass="python">PYTHON: <code>python</code></button>
-                <button type="button" class="chip-pass" data-sub="MATHS" data-pass="maths">MATHS: <code>maths</code></button>
-                <button type="button" class="chip-pass" data-sub="DSA" data-pass="dsa">DSA: <code>dsa</code></button>
-                <button type="button" class="chip-pass" data-sub="WEB" data-pass="web">WEB: <code>web</code></button>
+                <button type="button" class="chip-pass" data-sub="OOPS" data-pass="oops">OOPS: <code>oops</code></button>
+                <button type="button" class="chip-pass" data-sub="OSS" data-pass="oss">OSS: <code>oss</code></button>
+                <button type="button" class="chip-pass" data-sub="BEFA" data-pass="befa">BEFA: <code>befa</code></button>
+                <button type="button" class="chip-pass" data-sub="DMS" data-pass="dms">DMS: <code>dms</code></button>
+                <button type="button" class="chip-pass" data-sub="DBMS" data-pass="dbms">DBMS: <code>dbms</code></button>
               </div>
               <div class="helper-sub">Master Password: <code>teach123</code></div>
             </div>
@@ -256,11 +256,11 @@
           <div class="banner-avatar" id="tDashAvatar">NP</div>
           <div class="banner-info">
             <div class="banner-tags">
-              <span class="tag-subject" id="tDashSubCode">JAVA</span>
-              <span class="tag-dept">CSE 3rd Year / Section A</span>
+              <span class="tag-subject" id="tDashSubCode">OOPS</span>
+              <span class="tag-dept">CSE 2-1 Sem / Section B</span>
             </div>
-            <h1 class="banner-name" id="tDashFacultyName">Dr. Naga Padmaja</h1>
-            <p class="banner-course" id="tDashSubName">Course: Java Programming</p>
+            <h1 class="banner-name" id="tDashFacultyName">DR.J.Naga Padmaja</h1>
+            <p class="banner-course" id="tDashSubName">Course: Object Oriented Programming</p>
           </div>
         </div>
 
@@ -268,11 +268,11 @@
           <div class="subject-switcher-dropdown">
             <label for="tDashSubjectSwitcher" class="switch-label">Switch Subject Teacher:</label>
             <select id="tDashSubjectSwitcher" class="form-select form-select-sm">
-              <option value="JAVA">JAVA - Java Programming (Dr. Naga Padmaja)</option>
-              <option value="PYTHON">PYTHON - Python Programming (Dr. Rajesh)</option>
-              <option value="MATHS">MATHS - Engineering Maths (Dr. Sharma)</option>
-              <option value="DSA">DSA - Data Structures & Algo (Prof. Priya)</option>
-              <option value="WEB">WEB - Web Technologies (Prof. Arun)</option>
+              <option value="OOPS">OOPS - Object Oriented Programming (DR.J.Naga Padmaja)</option>
+              <option value="OSS">OSS - Operating Systems (Kavitha Chitrala)</option>
+              <option value="BEFA">BEFA - Business Economics & Financial Analysis (Sallapalle Archana)</option>
+              <option value="DMS">DMS - Discrete Mathematics (DhanaLakshmi Dumpala)</option>
+              <option value="DBMS">DBMS - Database Management Systems (Prasada Reddy G S)</option>
             </select>
           </div>
         </div>
@@ -308,7 +308,7 @@
           <div class="card clean-card">
             <div class="card-title-bar">
               <div>
-                <h2 class="card-h2">Post Attendance for <span id="postCourseNameText">Java Programming</span></h2>
+                <h2 class="card-h2">Post Attendance for <span id="postCourseNameText">Object Oriented Programming</span></h2>
                 <p class="card-p">Select the lecture date, mark absent or present students, and click Save Attendance.</p>
               </div>
             </div>
@@ -414,7 +414,7 @@
             <div class="card-title-bar flex-between">
               <div>
                 <h2 class="card-h2">Class Attendance Register (All 30 Students)</h2>
-                <p class="card-p" id="registerCourseSubtitle">3rd Year B.Tech CSE • Java Programming</p>
+                <p class="card-p" id="registerCourseSubtitle">2-1 Sem B.Tech CSE • Object Oriented Programming</p>
               </div>
               <div class="btn-group-right">
                 <button type="button" class="btn btn-secondary btn-sm" id="btnDownloadRegisterCsv">
@@ -589,7 +589,7 @@
         <div class="student-info">
           <div class="student-roll-tag" id="sDashRollTag">Roll #101</div>
           <h1 class="student-name" id="sDashName">Aarav Sharma</h1>
-          <p class="student-class" id="sDashClass">Department of Computer Science & Engineering • 3rd Year / Section A</p>
+          <p class="student-class" id="sDashClass">Department of Computer Science & Engineering • 2-1 Sem / Section B</p>
         </div>
         <div class="student-aggregate-box">
           <span class="agg-label">Overall 5-Subject Aggregate</span>
@@ -635,7 +635,7 @@
       </div>
 
       <div class="subjects-cards-row" id="sDashSubjectCardsGrid">
-        <!-- 5 Cards for Java, Python, Maths, DSA, Web populated by JS -->
+        <!-- 5 Cards for OOPS, OSS, BEFA, DMS, DBMS populated by JS -->
       </div>
 
       <!-- 5-Subjects Table & History Grid -->
@@ -673,11 +673,11 @@
             <h3 class="card-h2">Date-wise Lecture Log</h3>
             <select id="sDashHistorySubSelect" class="form-select form-select-sm" style="width: auto;">
               <option value="ALL">All 5 Subjects</option>
-              <option value="JAVA">JAVA - Java Programming</option>
-              <option value="PYTHON">PYTHON - Python Programming</option>
-              <option value="MATHS">MATHS - Engineering Maths</option>
-              <option value="DSA">DSA - Data Structures & Algo</option>
-              <option value="WEB">WEB - Web Technologies</option>
+              <option value="OOPS">OOPS - Object Oriented Programming</option>
+              <option value="OSS">OSS - Operating Systems</option>
+              <option value="BEFA">BEFA - Business Economics & Financial Analysis</option>
+              <option value="DMS">DMS - Discrete Mathematics</option>
+              <option value="DBMS">DBMS - Database Management Systems</option>
             </select>
           </div>
           <div class="table-wrapper history-scroll-box">

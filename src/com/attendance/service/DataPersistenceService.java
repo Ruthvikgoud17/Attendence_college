@@ -123,11 +123,11 @@ public class DataPersistenceService {
         }
 
         // 1. Add 5 Subjects with 5 Different Teachers and Passwords (password = subject name)
-        service.addSubject(new Subject("JAVA",   "Java Programming",         "Dr. Naga Padmaja", "java"));
-        service.addSubject(new Subject("PYTHON", "Python Programming",       "Dr. Rajesh",   "python"));
-        service.addSubject(new Subject("MATHS",  "Engineering Mathematics",  "Dr. Sharma",   "maths"));
-        service.addSubject(new Subject("DSA",    "Data Structures & Algo",   "Prof. Priya",  "dsa"));
-        service.addSubject(new Subject("WEB",    "Web Technologies",         "Prof. Arun",   "web"));
+        service.addSubject(new Subject("OOPS", "Object Oriented Programming",            "DR.J.Naga Padmaja",   "oops"));
+        service.addSubject(new Subject("OSS",  "Operating Systems",                      "Kavitha Chitrala",    "oss"));
+        service.addSubject(new Subject("BEFA", "Business Economics & Financial Analysis", "Sallapalle Archana",  "befa"));
+        service.addSubject(new Subject("DMS",  "Discrete Mathematics",                   "DhanaLakshmi Dumpala", "dms"));
+        service.addSubject(new Subject("DBMS", "Database Management Systems",            "Prasada Reddy G S",   "dbms"));
 
         // 2. Add 30 Realistic Students
         String[][] studentsData = {
@@ -164,12 +164,12 @@ public class DataPersistenceService {
         };
 
         for (String[] st : studentsData) {
-            service.addStudent(new Student(st[0], st[1], "CSE", "3rd Year / A"));
+            service.addStudent(new Student(st[0], st[1], "CSE", "2-1 SEM / B"));
         }
 
         // 3. Seed 10 Days of Attendance across all 5 subjects ending on today (present day)
         LocalDate today = LocalDate.now();
-        String[] subjects = {"JAVA", "PYTHON", "MATHS", "DSA", "WEB"};
+        String[] subjects = {"OOPS", "OSS", "BEFA", "DMS", "DBMS"};
 
         for (int day = 9; day >= 0; day--) {
             LocalDate dt = today.minusDays(day);

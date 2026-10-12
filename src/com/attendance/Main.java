@@ -68,13 +68,13 @@ public class Main {
         System.out.println("==========================================================================");
         System.out.println("                    COLLEGE ATTENDANCE MANAGEMENT SYSTEM                  ");
         System.out.println("            Enterprise Attendance Tracking, Analytics & Reporting         ");
-        System.out.println("              Course Lecturer: Dr. Naga Padmaja (Java Programming)        ");
+        System.out.println("              Course Lecturer: DR.J.Naga Padmaja (OOPS)                   ");
         System.out.println("==========================================================================" + RESET);
     }
 
     private static void printMainMenu() {
         System.out.println("\n" + BOLD + "=================== MAIN MENU ===================" + RESET);
-        System.out.println("  [" + CYAN + "1" + RESET + "] Teacher Portal (Faculty Attendance - Dr. Naga Padmaja)");
+        System.out.println("  [" + CYAN + "1" + RESET + "] Teacher Portal (Faculty Attendance - DR.J.Naga Padmaja)");
         System.out.println("  [" + CYAN + "2" + RESET + "] Student Portal (Roll Number + Password <roll>@123)");
         System.out.println("  [" + CYAN + "3" + RESET + "] Multi-Threaded Classroom Attendance Audit Engine");
         System.out.println("  [" + CYAN + "4" + RESET + "] High-Performance Analytics & Defaulters Report (< 75%)");
@@ -91,11 +91,11 @@ public class Main {
     private static void handleTeacherLogin() {
         System.out.println("\n" + CYAN + BOLD + "========== TEACHER LOGIN ==========" + RESET);
         System.out.println("5 Subjects & 5 Teachers available:");
-        System.out.println("  - [JAVA]   Java Programming         -> Password: " + YELLOW + "java" + RESET + "   (Dr. Naga Padmaja)");
-        System.out.println("  - [PYTHON] Python Programming       -> Password: " + YELLOW + "python" + RESET + " (Dr. Rajesh)");
-        System.out.println("  - [MATHS]  Engineering Mathematics  -> Password: " + YELLOW + "maths" + RESET + "  (Dr. Sharma)");
-        System.out.println("  - [DSA]    Data Structures & Algo   -> Password: " + YELLOW + "dsa" + RESET + "    (Prof. Priya)");
-        System.out.println("  - [WEB]    Web Technologies         -> Password: " + YELLOW + "web" + RESET + "    (Prof. Arun)");
+        System.out.println("  - [OOPS]   Object Oriented Programming  -> Password: " + YELLOW + "oops" + RESET + "   (DR.J.Naga Padmaja)");
+        System.out.println("  - [OSS]    Operating Systems            -> Password: " + YELLOW + "oss" + RESET + "    (Kavitha Chitrala)");
+        System.out.println("  - [BEFA]   Business Economics & Fin     -> Password: " + YELLOW + "befa" + RESET + "   (Sallapalle Archana)");
+        System.out.println("  - [DMS]    Discrete Mathematics         -> Password: " + YELLOW + "dms" + RESET + "    (DhanaLakshmi Dumpala)");
+        System.out.println("  - [DBMS]   Database Management Systems  -> Password: " + YELLOW + "dbms" + RESET + "   (Prasada Reddy G S)");
         System.out.println("--------------------------------------------------------------------------");
 
         String passwordInput = prompt("Enter Subject Password: ").trim().toLowerCase();
@@ -110,7 +110,7 @@ public class Main {
         }
 
         if (loggedInSubject == null) {
-            System.out.println(RED + "Invalid password! Password must be the subject name (e.g. java, python, maths, dsa, web)." + RESET);
+            System.out.println(RED + "Invalid password! Password must be the subject name (e.g. oops, oss, befa, dms, dbms)." + RESET);
             return;
         }
 
@@ -434,7 +434,7 @@ public class Main {
             System.out.printf("  %d. [%s] %s%n", (i + 1), s.getSubjectCode(), s.getSubjectName());
         }
 
-        String input = prompt("Select Subject [1-5 or Code like JAVA/PYTHON/MATHS/DSA/WEB]: ").trim().toUpperCase();
+        String input = prompt("Select Subject [1-5 or Code like OOPS/OSS/BEFA/DMS/DBMS]: ").trim().toUpperCase();
         Subject subject = null;
         try {
             int num = Integer.parseInt(input);

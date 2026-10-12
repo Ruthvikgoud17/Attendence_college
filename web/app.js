@@ -13,47 +13,47 @@
 
   let isBackendOnline = false;
 
-  // 30 Standard Preloaded Students (CSE 3rd Year / Section A)
+  // 30 Standard Preloaded Students (CSE 2-1 Sem / Section B)
   const PRELOADED_STUDENTS = [
-    { rollNo: "101", name: "Aarav Sharma", department: "CSE", yearSection: "3RD YEAR / A" },
-    { rollNo: "102", name: "Bhavna Patel", department: "CSE", yearSection: "3RD YEAR / A" },
-    { rollNo: "103", name: "Chirag Reddy", department: "CSE", yearSection: "3RD YEAR / A" },
-    { rollNo: "104", name: "Divya Nair", department: "CSE", yearSection: "3RD YEAR / A" },
-    { rollNo: "105", name: "Eshwar Rao", department: "CSE", yearSection: "3RD YEAR / A" },
-    { rollNo: "106", name: "Farhan Khan", department: "CSE", yearSection: "3RD YEAR / A" },
-    { rollNo: "107", name: "Gayatri Joshi", department: "CSE", yearSection: "3RD YEAR / A" },
-    { rollNo: "108", name: "Harish Verma", department: "CSE", yearSection: "3RD YEAR / A" },
-    { rollNo: "109", name: "Ishita Sen", department: "CSE", yearSection: "3RD YEAR / A" },
-    { rollNo: "110", name: "Jatin Gupta", department: "CSE", yearSection: "3RD YEAR / A" },
-    { rollNo: "111", name: "Kavya Iyer", department: "CSE", yearSection: "3RD YEAR / A" },
-    { rollNo: "112", name: "Lokesh Yadav", department: "CSE", yearSection: "3RD YEAR / A" },
-    { rollNo: "113", name: "Meera Das", department: "CSE", yearSection: "3RD YEAR / A" },
-    { rollNo: "114", name: "Nikhil Kumar", department: "CSE", yearSection: "3RD YEAR / A" },
-    { rollNo: "115", name: "Olivia Roy", department: "CSE", yearSection: "3RD YEAR / A" },
-    { rollNo: "116", name: "Pranav Malhotra", department: "CSE", yearSection: "3RD YEAR / A" },
-    { rollNo: "117", name: "Qadir Ali", department: "CSE", yearSection: "3RD YEAR / A" },
-    { rollNo: "118", name: "Ritu Menon", department: "CSE", yearSection: "3RD YEAR / A" },
-    { rollNo: "119", name: "Sanjay Pillai", department: "CSE", yearSection: "3RD YEAR / A" },
-    { rollNo: "120", name: "Tanvi Deshmukh", department: "CSE", yearSection: "3RD YEAR / A" },
-    { rollNo: "121", name: "Uday Chauhan", department: "CSE", yearSection: "3RD YEAR / A" },
-    { rollNo: "122", name: "Vaishnavi Bhat", department: "CSE", yearSection: "3RD YEAR / A" },
-    { rollNo: "123", name: "Wasim Akram", department: "CSE", yearSection: "3RD YEAR / A" },
-    { rollNo: "124", name: "Xenia D'Souza", department: "CSE", yearSection: "3RD YEAR / A" },
-    { rollNo: "125", name: "Yash Kulkarni", department: "CSE", yearSection: "3RD YEAR / A" },
-    { rollNo: "126", name: "Zoya Siddiqui", department: "CSE", yearSection: "3RD YEAR / A" },
-    { rollNo: "127", name: "Ananya Pandey", department: "CSE", yearSection: "3RD YEAR / A" },
-    { rollNo: "128", name: "Bharat Subramanian", department: "CSE", yearSection: "3RD YEAR / A" },
-    { rollNo: "129", name: "Chetan Bhagat", department: "CSE", yearSection: "3RD YEAR / A" },
-    { rollNo: "130", name: "Deepa Mehta", department: "CSE", yearSection: "3RD YEAR / A" }
+    { rollNo: "101", name: "Aarav Sharma", department: "CSE", yearSection: "2-1 SEM / B" },
+    { rollNo: "102", name: "Bhavna Patel", department: "CSE", yearSection: "2-1 SEM / B" },
+    { rollNo: "103", name: "Chirag Reddy", department: "CSE", yearSection: "2-1 SEM / B" },
+    { rollNo: "104", name: "Divya Nair", department: "CSE", yearSection: "2-1 SEM / B" },
+    { rollNo: "105", name: "Eshwar Rao", department: "CSE", yearSection: "2-1 SEM / B" },
+    { rollNo: "106", name: "Farhan Khan", department: "CSE", yearSection: "2-1 SEM / B" },
+    { rollNo: "107", name: "Gayatri Joshi", department: "CSE", yearSection: "2-1 SEM / B" },
+    { rollNo: "108", name: "Harish Verma", department: "CSE", yearSection: "2-1 SEM / B" },
+    { rollNo: "109", name: "Ishita Sen", department: "CSE", yearSection: "2-1 SEM / B" },
+    { rollNo: "110", name: "Jatin Gupta", department: "CSE", yearSection: "2-1 SEM / B" },
+    { rollNo: "111", name: "Kavya Iyer", department: "CSE", yearSection: "2-1 SEM / B" },
+    { rollNo: "112", name: "Lokesh Yadav", department: "CSE", yearSection: "2-1 SEM / B" },
+    { rollNo: "113", name: "Meera Das", department: "CSE", yearSection: "2-1 SEM / B" },
+    { rollNo: "114", name: "Nikhil Kumar", department: "CSE", yearSection: "2-1 SEM / B" },
+    { rollNo: "115", name: "Olivia Roy", department: "CSE", yearSection: "2-1 SEM / B" },
+    { rollNo: "116", name: "Pranav Malhotra", department: "CSE", yearSection: "2-1 SEM / B" },
+    { rollNo: "117", name: "Qadir Ali", department: "CSE", yearSection: "2-1 SEM / B" },
+    { rollNo: "118", name: "Ritu Menon", department: "CSE", yearSection: "2-1 SEM / B" },
+    { rollNo: "119", name: "Sanjay Pillai", department: "CSE", yearSection: "2-1 SEM / B" },
+    { rollNo: "120", name: "Tanvi Deshmukh", department: "CSE", yearSection: "2-1 SEM / B" },
+    { rollNo: "121", name: "Uday Chauhan", department: "CSE", yearSection: "2-1 SEM / B" },
+    { rollNo: "122", name: "Vaishnavi Bhat", department: "CSE", yearSection: "2-1 SEM / B" },
+    { rollNo: "123", name: "Wasim Akram", department: "CSE", yearSection: "2-1 SEM / B" },
+    { rollNo: "124", name: "Xenia D'Souza", department: "CSE", yearSection: "2-1 SEM / B" },
+    { rollNo: "125", name: "Yash Kulkarni", department: "CSE", yearSection: "2-1 SEM / B" },
+    { rollNo: "126", name: "Zoya Siddiqui", department: "CSE", yearSection: "2-1 SEM / B" },
+    { rollNo: "127", name: "Ananya Pandey", department: "CSE", yearSection: "2-1 SEM / B" },
+    { rollNo: "128", name: "Bharat Subramanian", department: "CSE", yearSection: "2-1 SEM / B" },
+    { rollNo: "129", name: "Chetan Bhagat", department: "CSE", yearSection: "2-1 SEM / B" },
+    { rollNo: "130", name: "Deepa Mehta", department: "CSE", yearSection: "2-1 SEM / B" }
   ];
 
   // 5 Subject Teachers & Passwords
   const PRELOADED_SUBJECTS = [
-    { subjectCode: "JAVA", subjectName: "Java Programming", facultyName: "Dr. Naga Padmaja", password: "java" },
-    { subjectCode: "PYTHON", subjectName: "Python Programming", facultyName: "Dr. Rajesh", password: "python" },
-    { subjectCode: "MATHS", subjectName: "Engineering Mathematics", facultyName: "Dr. Sharma", password: "maths" },
-    { subjectCode: "DSA", subjectName: "Data Structures & Algo", facultyName: "Prof. Priya", password: "dsa" },
-    { subjectCode: "WEB", subjectName: "Web Technologies", facultyName: "Prof. Arun", password: "web" }
+    { subjectCode: "OOPS", subjectName: "Object Oriented Programming", facultyName: "DR.J.Naga Padmaja", password: "oops" },
+    { subjectCode: "OSS", subjectName: "Operating Systems", facultyName: "Kavitha Chitrala", password: "oss" },
+    { subjectCode: "BEFA", subjectName: "Business Economics & Financial Analysis", facultyName: "Sallapalle Archana", password: "befa" },
+    { subjectCode: "DMS", subjectName: "Discrete Mathematics", facultyName: "DhanaLakshmi Dumpala", password: "dms" },
+    { subjectCode: "DBMS", subjectName: "Database Management Systems", facultyName: "Prasada Reddy G S", password: "dbms" }
   ];
 
   let localStudents = PRELOADED_STUDENTS.map(s => ({
@@ -64,7 +64,7 @@
   let localAttendanceRecords = [];
 
   // Active Session State
-  let activeTeacherSubject = PRELOADED_SUBJECTS[0]; // JAVA
+  let activeTeacherSubject = PRELOADED_SUBJECTS[0]; // OOPS
   let activeStudent = null;
   let rosterStatusMap = {}; // rollNo -> "Present" | "Absent"
 
@@ -104,7 +104,7 @@
 
   function getInitials(name) {
     if (!name) return 'EX';
-    const clean = name.replace(/^(Prof\.|Dr\.|Mr\.|Ms\.)\s*/, '').trim();
+    const clean = name.replace(/^(Prof\.|Dr\.|Mr\.|Ms\.)\s*/i, '').trim();
     const parts = clean.split(/\s+/);
     if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
     return clean.substring(0, 2).toUpperCase();
@@ -139,13 +139,18 @@
     if (cached) {
       try {
         const parsed = JSON.parse(cached);
-        const hasFuture = parsed.some(r => r.date > today);
-        const hasTodayAll = PRELOADED_SUBJECTS.every(sub =>
-          parsed.some(r => r.date === today && r.subjectCode === sub.subjectCode)
-        );
-        if (!hasFuture && hasTodayAll) {
-          localAttendanceRecords = parsed;
-          return;
+        const hasObsolete = parsed.some(r => ['JAVA', 'PYTHON', 'MATHS', 'DSA', 'WEB'].includes(r.subjectCode));
+        if (hasObsolete) {
+          localStorage.removeItem('apex_attendance_records');
+        } else {
+          const hasFuture = parsed.some(r => r.date > today);
+          const hasTodayAll = PRELOADED_SUBJECTS.every(sub =>
+            parsed.some(r => r.date === today && r.subjectCode === sub.subjectCode)
+          );
+          if (!hasFuture && hasTodayAll) {
+            localAttendanceRecords = parsed;
+            return;
+          }
         }
       } catch (e) {}
     }
@@ -167,11 +172,11 @@
           if (date === today) {
             // Present day attendance across all 5 curriculum subjects
             if (rollNum >= 126) {
-              isPresent = (sub.subjectCode !== "MATHS" && sub.subjectCode !== "DSA");
+              isPresent = (sub.subjectCode !== "BEFA" && sub.subjectCode !== "DMS");
             } else if (rollNum >= 121) {
-              isPresent = !(sub.subjectCode === "DSA" && rollNum % 2 === 0);
+              isPresent = !(sub.subjectCode === "DMS" && rollNum % 2 === 0);
             } else if (rollNum === 109) {
-              isPresent = (sub.subjectCode !== "MATHS");
+              isPresent = (sub.subjectCode !== "BEFA");
             } else {
               isPresent = true; // Top & regular students 100% Present on today
             }
@@ -321,7 +326,7 @@
           if (json.success && json.subject) {
             matchedSubject = json.subject;
           } else {
-            errBox.textContent = json.message || 'Invalid password! Standard passwords are: java, python, maths, dsa, web.';
+            errBox.textContent = json.message || 'Invalid password! Standard passwords are: oops, oss, befa, dms, dbms.';
             errBox.style.display = 'block';
             return;
           }
@@ -368,7 +373,7 @@
     document.getElementById('tDashFacultyName').textContent = subject.facultyName;
     document.getElementById('tDashSubName').textContent = `Course: ${subject.subjectName}`;
     document.getElementById('postCourseNameText').textContent = subject.subjectName;
-    document.getElementById('registerCourseSubtitle').textContent = `3rd Year B.Tech CSE • ${subject.subjectName}`;
+    document.getElementById('registerCourseSubtitle').textContent = `2-1 Sem B.Tech CSE • ${subject.subjectName}`;
     document.getElementById('tDashSubjectSwitcher').value = subject.subjectCode;
 
     // Reset post form
@@ -1137,7 +1142,7 @@
       <div style="font-family:serif; line-height:1.6; font-size:0.92rem; color:#0f172a;">
         <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:12px 16px; border-radius:6px; margin-bottom:16px;">
           <p><strong>TO CANDIDATE:</strong> ${student.name.toUpperCase()} (Roll No: ${student.rollNo})</p>
-          <p><strong>PROGRAM / SECTION:</strong> B.Tech CSE (3rd Year / Section A)</p>
+          <p><strong>PROGRAM / SECTION:</strong> B.Tech CSE (2-1 Sem / Section B)</p>
           <p><strong>CURRENT AGGREGATE ATTENDANCE:</strong> <span style="color:#dc2626; font-weight:bold;">${aggregate.percentage}%</span></p>
         </div>
 
@@ -1425,7 +1430,11 @@
       try {
         const res = await fetch(`${API_BASE}/api/attendance/summary?rollNo=${student.rollNo}`);
         if (res.ok) {
-          summaryData = await res.json();
+          const json = await res.json();
+          const hasObsolete = json.summaries && json.summaries.some(s => ['JAVA', 'PYTHON', 'MATHS', 'DSA', 'WEB'].includes(s.subjectCode));
+          if (!hasObsolete) {
+            summaryData = json;
+          }
         }
       } catch (e) {}
     }
@@ -1604,8 +1613,19 @@
     `;
     tbodyStatement.appendChild(totalTr);
 
+    // Ensure history subject dropdown has the current subjects (OOPS, OSS, BEFA, DMS, DBMS)
+    const histSelect = document.getElementById('sDashHistorySubSelect');
+    if (histSelect) {
+      const prevVal = histSelect.value || 'ALL';
+      histSelect.innerHTML = `
+        <option value="ALL">All 5 Subjects</option>
+        ${localSubjects.map(s => `<option value="${s.subjectCode}">${s.subjectCode} - ${s.subjectName}</option>`).join('')}
+      `;
+      histSelect.value = localSubjects.some(s => s.subjectCode === prevVal) ? prevVal : 'ALL';
+    }
+
     // Load Lecture Log
-    loadStudentHistoryLog(student.rollNo, document.getElementById('sDashHistorySubSelect').value);
+    loadStudentHistoryLog(student.rollNo, histSelect ? histSelect.value : 'ALL');
 
     // Switch view to Student Dashboard
     showView(Views.studentDashboard);
@@ -1630,7 +1650,7 @@
     }
 
     // Sort by date descending; if same date, sort by canonical subject order
-    const subOrder = { 'JAVA': 1, 'PYTHON': 2, 'MATHS': 3, 'DSA': 4, 'WEB': 5 };
+    const subOrder = { 'OOPS': 1, 'OSS': 2, 'BEFA': 3, 'DMS': 4, 'DBMS': 5 };
     records.sort((a, b) => {
       const cmp = b.date.localeCompare(a.date);
       if (cmp !== 0) return cmp;

@@ -30,6 +30,7 @@ yarn-error.log*
 *.iml
 .system_generated/
 .vercel/
+tempCodeRunnerFile*
 Thumbs.db
 Desktop.ini
 .DS_Store

@@ -6,6 +6,7 @@ package com.attendance.model;
 public class AttendanceSummary {
     private String subjectCode;
     private String subjectName;
+    private String facultyName;
     private int totalClasses;
     private int presentClasses;
     private int absentClasses;
@@ -14,8 +15,13 @@ public class AttendanceSummary {
     private int classesNeededFor75;
 
     public AttendanceSummary(String subjectCode, String subjectName, int totalClasses, int presentClasses, int absentClasses) {
+        this(subjectCode, subjectName, "", totalClasses, presentClasses, absentClasses);
+    }
+
+    public AttendanceSummary(String subjectCode, String subjectName, String facultyName, int totalClasses, int presentClasses, int absentClasses) {
         this.subjectCode = subjectCode;
         this.subjectName = subjectName;
+        this.facultyName = facultyName != null ? facultyName : "";
         this.totalClasses = totalClasses;
         this.presentClasses = presentClasses;
         this.absentClasses = absentClasses;
@@ -46,6 +52,10 @@ public class AttendanceSummary {
 
     public String getSubjectName() {
         return subjectName;
+    }
+
+    public String getFacultyName() {
+        return facultyName;
     }
 
     public int getTotalClasses() {

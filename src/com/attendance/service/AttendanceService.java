@@ -129,6 +129,7 @@ public class AttendanceService {
 
         Subject sub = subjects.get(subCode);
         String subName = (sub != null) ? sub.getSubjectName() : subCode;
+        String facultyName = (sub != null) ? sub.getFacultyName() : "";
 
         // Count unique dates when this subject had lectures
         Set<LocalDate> dates = attendanceRecords.stream()
@@ -153,7 +154,7 @@ public class AttendanceService {
             absentClasses += (totalClasses - recorded);
         }
 
-        return new AttendanceSummary(subCode, subName, totalClasses, presentClasses, absentClasses);
+        return new AttendanceSummary(subCode, subName, facultyName, totalClasses, presentClasses, absentClasses);
     }
 
     /**

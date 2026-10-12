@@ -33,12 +33,12 @@ public class DatabaseSimulator {
         System.out.println("  SQL Template: " + CYAN + insertSql + RESET);
 
         Student sample = service.getStudent("101").orElse(null);
-        Subject javaSub = service.getSubject("JAVA").orElse(null);
+        Subject oopsSub = service.getSubject("OOPS").orElse(null);
 
-        if (sample != null && javaSub != null) {
+        if (sample != null && oopsSub != null) {
             System.out.println("  Binding Query Parameters:");
             System.out.printf("    param[1] = \"%s\" (Student Roll)%n", sample.getRollNo());
-            System.out.printf("    param[2] = \"%s\" (Subject Code - Faculty: %s)%n", javaSub.getSubjectCode(), javaSub.getFacultyName());
+            System.out.printf("    param[2] = \"%s\" (Subject Code - Faculty: %s)%n", oopsSub.getSubjectCode(), oopsSub.getFacultyName());
             System.out.println("    param[3] = 2026-10-07 (Lecture Date)");
             System.out.println("    param[4] = \"Present\" (Status)");
             System.out.println("  Executing: pstmt.executeUpdate()");

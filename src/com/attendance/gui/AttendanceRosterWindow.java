@@ -16,7 +16,7 @@ import static com.attendance.util.TableFormatter.*;
 /**
  * Interactive Graphical User Interface Roster Window.
  * Built using Swing and Delegation Event Model with dynamic ActionListener filtering.
- * Course Faculty: Dr. Naga Padmaja
+ * Course Faculty: DR.J.Naga Padmaja
  */
 public class AttendanceRosterWindow {
 
@@ -25,7 +25,7 @@ public class AttendanceRosterWindow {
         System.out.println("==========================================================================");
         System.out.println("          GRAPHICAL USER INTERFACE: ATTENDANCE ROSTER WINDOW              ");
         System.out.println("      Interactive Swing Window • Delegation Event Model • Live Table      ");
-        System.out.println("              Course Faculty: Dr. Naga Padmaja (Java Programming)         ");
+        System.out.println("              Course Faculty: DR.J.Naga Padmaja (OOPS)                    ");
         System.out.println("==========================================================================" + RESET);
 
         if (GraphicsEnvironment.isHeadless()) {
@@ -57,7 +57,7 @@ public class AttendanceRosterWindow {
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 17));
         titleLabel.setForeground(new Color(30, 58, 138));
 
-        JLabel subLabel = new JLabel("Interactive Roster View • Course Lecturer: Dr. Naga Padmaja", SwingConstants.CENTER);
+        JLabel subLabel = new JLabel("Interactive Roster View • Course Lecturer: DR.J.Naga Padmaja (OOPS)", SwingConstants.CENTER);
         subLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         subLabel.setForeground(new Color(71, 85, 105));
 

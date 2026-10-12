@@ -394,7 +394,7 @@ public class AttendanceWebServer {
             if (subjectCode != null && !subjectCode.trim().isEmpty() && !subjectCode.equalsIgnoreCase("ALL")) {
                 records = service.getStudentSubjectHistory(rollNo.trim(), subjectCode.trim());
             } else {
-                List<String> subOrder = List.of("JAVA", "PYTHON", "MATHS", "DSA", "WEB");
+                List<String> subOrder = List.of("OOPS", "OSS", "BEFA", "DMS", "DBMS");
                 records = service.getAllAttendanceRecords().stream()
                         .filter(r -> r.getRollNo().equalsIgnoreCase(rollNo.trim()))
                         .sorted(Comparator.comparing(AttendanceRecord::getDate).reversed()
@@ -733,6 +733,7 @@ public class AttendanceWebServer {
         return "{" +
                 "\"subjectCode\":\"" + escapeJson(sum.getSubjectCode()) + "\"," +
                 "\"subjectName\":\"" + escapeJson(sum.getSubjectName()) + "\"," +
+                "\"facultyName\":\"" + escapeJson(sum.getFacultyName()) + "\"," +
                 "\"totalClasses\":" + sum.getTotalClasses() + "," +
                 "\"presentClasses\":" + sum.getPresentClasses() + "," +
                 "\"absentClasses\":" + sum.getAbsentClasses() + "," +
